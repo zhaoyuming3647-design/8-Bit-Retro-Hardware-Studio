@@ -21,10 +21,10 @@
           },
           colors: {
             retro: {
-              bg: '#0b0e14',
-              panel: '#131822',
-              card: '#1a2130',
-              border: '#283246',
+              bg: 'var(--retro-bg)',
+              panel: 'var(--retro-panel)',
+              card: 'var(--retro-card)',
+              border: 'var(--retro-border)',
               accent: '#10b981',
               amber: '#f59e0b',
               cyan: '#06b6d4',
@@ -36,13 +36,49 @@
     };
   </script>
   <style>
+    :root {
+      --retro-bg: #f1f5f9;
+      --retro-panel: #ffffff;
+      --retro-card: #f8fafc;
+      --retro-border: #cbd5e1;
+      --retro-text: #0f172a;
+      --retro-muted: #475569;
+      --checker-a: #e2e8f0;
+      --checker-b: #f8fafc;
+      --range-track: #cbd5e1;
+    }
+    html.dark {
+      --retro-bg: #0b0e14;
+      --retro-panel: #131822;
+      --retro-card: #1a2130;
+      --retro-border: #283246;
+      --retro-text: #e2e8f0;
+      --retro-muted: #94a3b8;
+      --checker-a: #0f131a;
+      --checker-b: #181f2c;
+      --range-track: #252f42;
+    }
     * { box-sizing: border-box; }
     body {
-      background-color: #0b0e14;
-      color: #e2e8f0;
+      background-color: var(--retro-bg);
+      color: var(--retro-text);
       font-family: 'Inter', system-ui, sans-serif;
       overflow-x: hidden;
+      transition: background-color 0.2s ease, color 0.2s ease;
     }
+    /* Light mode adaptive text overrides for utility classes */
+    html:not(.dark) .text-white { color: #0f172a !important; }
+    html:not(.dark) .text-slate-200 { color: #1e293b !important; }
+    html:not(.dark) .text-slate-300 { color: #334155 !important; }
+    html:not(.dark) .text-slate-400 { color: #64748b !important; }
+    html:not(.dark) .text-emerald-300 { color: #047857 !important; }
+    html:not(.dark) .text-emerald-400 { color: #059669 !important; }
+    html:not(.dark) .text-amber-300 { color: #b45309 !important; }
+    html:not(.dark) .bg-slate-800 { background-color: #e2e8f0 !important; }
+    html:not(.dark) .bg-slate-700 { background-color: #cbd5e1 !important; }
+    html:not(.dark) .hover\:bg-slate-700:hover { background-color: #e2e8f0 !important; }
+    html:not(.dark) .hover\:bg-slate-800:hover { background-color: #e2e8f0 !important; }
+
     .pixelated {
       image-rendering: -moz-crisp-edges;
       image-rendering: -webkit-optimize-contrast;
@@ -51,18 +87,17 @@
     }
     /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #0f141d; }
-    ::-webkit-scrollbar-thumb { background: #2d384d; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #435373; }
+    ::-webkit-scrollbar-track { background: var(--retro-bg); }
+    ::-webkit-scrollbar-thumb { background: var(--retro-border); border-radius: 3px; }
 
     /* Checkerboard background for transparent GIFs/PNGs */
     .checkerboard {
-      background-color: #0f131a;
+      background-color: var(--checker-a);
       background-image:
-        linear-gradient(45deg, #181f2c 25%, transparent 25%),
-        linear-gradient(-45deg, #181f2c 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, #181f2c 75%),
-        linear-gradient(-45deg, transparent 75%, #181f2c 75%);
+        linear-gradient(45deg, var(--checker-b) 25%, transparent 25%),
+        linear-gradient(-45deg, var(--checker-b) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, var(--checker-b) 75%),
+        linear-gradient(-45deg, transparent 75%, var(--checker-b) 75%);
       background-size: 16px 16px;
       background-position: 0 0, 0 8px, 8px -8px, -8px 0;
     }
@@ -85,7 +120,7 @@
     input[type="range"] {
       -webkit-appearance: none;
       appearance: none;
-      background: #252f42;
+      background: var(--range-track);
       height: 6px;
       border-radius: 4px;
       outline: none;
@@ -93,8 +128,8 @@
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 15px;
-      height: 15px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
       background: #10b981;
       cursor: pointer;
@@ -102,46 +137,74 @@
       box-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
     }
     input[type="range"]::-moz-range-thumb {
-      width: 15px;
-      height: 15px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
       background: #10b981;
       cursor: pointer;
       border: 2px solid #0b0e14;
     }
+
+    /* Mobile UI Specific Layout Enhancements */
+    body.mobile-ui input[type="range"] { height: 8px; }
+    body.mobile-ui input[type="range"]::-webkit-slider-thumb { width: 22px; height: 22px; }
+    body.mobile-ui select, body.mobile-ui button { min-height: 38px; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-emerald-500 selection:text-slate-950">
 
   <!-- Top Navigation Header -->
-  <header class="sticky top-0 z-30 bg-retro-panel/95 backdrop-blur border-b border-retro-border px-4 py-2.5">
-    <div class="max-w-[1600px] mx-auto flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-lg bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-pixel text-xs shadow-inner">
+  <header class="sticky top-0 z-30 bg-retro-panel/95 backdrop-blur border-b border-retro-border px-3 sm:px-4 py-2.5">
+    <div class="max-w-[1600px] mx-auto flex flex-wrap items-center justify-between gap-2.5">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-lg bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-pixel text-xs shadow-inner shrink-0">
           8B
         </div>
         <div>
-          <div class="flex items-center gap-2">
+          <div class="flex flex-wrap items-center gap-1.5">
             <h1 class="font-bold text-sm sm:text-base tracking-tight text-white" data-i18n="appTitle">8-Bit Retro Hardware Studio</h1>
-            <span class="px-2 py-0.5 text-[10px] font-mono font-semibold uppercase rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">v1.0 Open Source</span>
+            <span class="px-1.5 py-0.5 text-[10px] font-mono font-semibold uppercase rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">v2.0</span>
+            <span id="deviceDetectedBadge" class="px-1.5 py-0.5 text-[10px] font-mono rounded bg-cyan-500/15 text-cyan-400 border border-cyan-500/30">🖥️ Desktop UI</span>
           </div>
-          <p class="text-xs text-slate-400 hidden sm:block" data-i18n="appSubtitle">硬件级分辨率 · 真实主机色盘 · 瓦片属性冲突 (Attribute Clash) · GIF 动图引擎</p>
+          <p class="text-xs text-slate-400 hidden xl:block" data-i18n="appSubtitle">硬件级分辨率 · 真实主机色盘 · 瓦片属性冲突 (Attribute Clash) · GIF 动图引擎</p>
         </div>
       </div>
 
-      <!-- Quick Preset Demo Bar & Actions -->
-      <div class="flex flex-wrap items-center gap-2">
-        <div class="flex items-center bg-retro-bg border border-retro-border rounded-lg p-0.5 text-xs">
-          <span class="px-2 py-1 text-slate-400 font-medium hidden md:inline" data-i18n="demoLabel">内置演示:</span>
-          <button id="demoBtnSynth" class="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 font-medium transition hover:bg-emerald-500/30" data-i18n="demoSynth">🌅 落日飞车 (GIF动图)</button>
-          <button id="demoBtnSlime" class="px-2.5 py-1 rounded-md text-slate-300 hover:bg-slate-800 transition" data-i18n="demoSlime">👾 勇者战史莱姆 (GIF动图)</button>
-          <button id="demoBtnCyber" class="px-2.5 py-1 rounded-md text-slate-300 hover:bg-slate-800 transition" data-i18n="demoCyber">🏙️ 霓虹街景 (静态图)</button>
-          <button id="demoBtnPortrait" class="px-2.5 py-1 rounded-md text-slate-300 hover:bg-slate-800 transition" data-i18n="demoPortrait">🎨 色阶测试卡</button>
+      <!-- Top Right Controls: Simple/Pro Mode, Preset Demos, Theme, Device UI, Spec & Lang -->
+      <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+
+        <!-- UI Complexity Switcher: Simple Mode vs Pro Studio Mode -->
+        <div class="inline-flex items-center bg-retro-bg border border-retro-border rounded-lg p-0.5 text-xs" title="切换界面复杂度">
+          <button id="btnUiModeSimple" class="px-2.5 py-1 rounded-md text-slate-300 hover:text-white transition" data-i18n="modeSimple">✨ 极简模式</button>
+          <button id="btnUiModePro" class="px-2.5 py-1 rounded-md bg-emerald-500 text-slate-950 font-semibold transition" data-i18n="modePro">🛠️ 专业模式</button>
         </div>
 
-        <button id="btnArchitectureModal" class="px-2.5 py-1.5 rounded-lg bg-retro-card hover:bg-slate-700 border border-retro-border text-xs font-medium text-slate-200 flex items-center gap-1.5 transition">
+        <!-- Quick Preset Demo Bar -->
+        <div id="demoBarContainer" class="flex items-center bg-retro-bg border border-retro-border rounded-lg p-0.5 text-xs overflow-x-auto max-w-full">
+          <span class="px-2 py-1 text-slate-400 font-medium hidden 2xl:inline" data-i18n="demoLabel">内置演示:</span>
+          <button id="demoBtnSynth" class="px-2 py-1 rounded-md bg-emerald-500/20 text-emerald-300 font-medium transition hover:bg-emerald-500/30 whitespace-nowrap" data-i18n="demoSynth">🌅 落日飞车 (GIF动图)</button>
+          <button id="demoBtnSlime" class="px-2 py-1 rounded-md text-slate-300 hover:bg-slate-800 transition whitespace-nowrap" data-i18n="demoSlime">👾 勇者战史莱姆 (GIF动图)</button>
+          <button id="demoBtnCyber" class="px-2 py-1 rounded-md text-slate-300 hover:bg-slate-800 transition whitespace-nowrap" data-i18n="demoCyber">🏙️ 霓虹街景 (静态图)</button>
+          <button id="demoBtnPortrait" class="px-2 py-1 rounded-md text-slate-300 hover:bg-slate-800 transition whitespace-nowrap" data-i18n="demoPortrait">🎨 色阶测试卡</button>
+        </div>
+
+        <!-- Theme Selector: System / Light / Dark -->
+        <select id="selectThemeMode" aria-label="Theme Mode" class="bg-retro-card hover:bg-slate-700 border border-retro-border rounded-lg px-2 py-1.5 text-xs font-medium text-slate-200 outline-none cursor-pointer">
+          <option value="system" data-i18n="themeSystem">🌗 主题: 跟随系统</option>
+          <option value="dark" selected data-i18n="themeDark">🌙 主题: 黑夜模式</option>
+          <option value="light" data-i18n="themeLight">☀️ 主题: 白天模式</option>
+        </select>
+
+        <!-- Device UI Override Selector: Auto / Desktop / Mobile -->
+        <select id="selectDeviceMode" aria-label="Device UI Mode" class="bg-retro-card hover:bg-slate-700 border border-retro-border rounded-lg px-2 py-1.5 text-xs font-medium text-slate-200 outline-none cursor-pointer">
+          <option value="auto" selected data-i18n="devAuto">📱/🖥️ 自动识别终端</option>
+          <option value="desktop" data-i18n="devDesktop">🖥️ 桌面端工作台 UI</option>
+          <option value="mobile" data-i18n="devMobile">📱 移动端触控 UI</option>
+        </select>
+
+        <button id="btnArchitectureModal" class="px-2.5 py-1.5 rounded-lg bg-retro-card hover:bg-slate-700 border border-retro-border text-xs font-medium text-slate-200 flex items-center gap-1 transition">
           <span>⚙️</span>
-          <span data-i18n="btnSpecInfo">硬件原理说明</span>
+          <span class="hidden sm:inline" data-i18n="btnSpecInfo">硬件原理说明</span>
         </button>
 
         <button id="btnToggleLang" class="px-2.5 py-1.5 rounded-lg bg-retro-card hover:bg-slate-700 border border-retro-border text-xs font-mono text-emerald-400 transition">
@@ -151,14 +214,24 @@
     </div>
   </header>
 
+  <!-- Mobile UI Quick Step Navigation Bar (Automatically shown when Mobile UI is active) -->
+  <nav id="mobileStepNav" class="hidden sticky top-[57px] z-20 bg-retro-panel border-b border-retro-border px-2 py-1.5">
+    <div class="grid grid-cols-4 gap-1 text-xs">
+      <button data-mobtab="input" class="mob-tab-btn py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-semibold text-center">1. 选图</button>
+      <button data-mobtab="hardware" class="mob-tab-btn py-1.5 rounded-lg text-slate-300 bg-retro-bg text-center">2. 主机/比例</button>
+      <button data-mobtab="dither" class="mob-tab-btn py-1.5 rounded-lg text-slate-300 bg-retro-bg text-center">3. 细节调优</button>
+      <button data-mobtab="export" class="mob-tab-btn py-1.5 rounded-lg text-slate-300 bg-retro-bg text-center">4. 导出成品</button>
+    </div>
+  </nav>
+
   <!-- Main Workspace Container -->
-  <main class="flex-1 max-w-[1600px] w-full mx-auto p-3 sm:p-4 grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+  <main id="mainWorkspace" class="flex-1 max-w-[1600px] w-full mx-auto p-3 sm:p-4 grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
 
     <!-- LEFT COLUMN: Hardware Specs, Dithering & Image Controls (4 cols on lg) -->
-    <aside class="lg:col-span-4 xl:col-span-3 flex flex-col gap-3.5">
+    <aside id="leftSidebar" class="lg:col-span-4 xl:col-span-3 flex flex-col gap-3.5">
 
       <!-- 1. File Upload / Input Card -->
-      <section class="bg-retro-panel border border-retro-border rounded-xl p-3.5 shadow-lg">
+      <section id="secInputCard" class="bg-retro-panel border border-retro-border rounded-xl p-3.5 shadow-lg">
         <div class="flex items-center justify-between mb-2.5">
           <h2 class="text-xs font-semibold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
             <span>01</span>
@@ -177,8 +250,8 @@
         </label>
       </section>
 
-      <!-- 2. Target 8-Bit Hardware Architecture -->
-      <section class="bg-retro-panel border border-retro-border rounded-xl p-3.5 shadow-lg space-y-3">
+      <!-- 2. Target 8-Bit Hardware Architecture & Multi-Mode Aspect Ratio / Resolution -->
+      <section id="secHardwareCard" class="bg-retro-panel border border-retro-border rounded-xl p-3.5 shadow-lg space-y-3">
         <div class="flex items-center justify-between">
           <h2 class="text-xs font-semibold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
             <span>02</span>
@@ -204,10 +277,103 @@
           </select>
         </div>
 
+        <!-- NEW: Aspect Ratio & Resolution Mode Selector -->
+        <div class="space-y-2 pt-1 border-t border-retro-border/60">
+          <div class="flex items-center justify-between">
+            <label for="selectAspectMode" class="text-xs text-slate-300 font-medium" data-i18n="lblAspectMode">生成画幅横纵比 (Aspect Ratio)</label>
+            <span id="origRatioHint" class="text-[10px] font-mono text-cyan-400">原图 16:15</span>
+          </div>
+          <select id="selectAspectMode" class="w-full bg-retro-bg border border-retro-border focus:border-emerald-500 rounded-lg px-2.5 py-2 text-xs text-white outline-none">
+            <optgroup label="经典与原图比例 (Native & Original)">
+              <option value="native" selected>🕹️ 对标主机原生横纵比 (Console Native)</option>
+              <option value="original">🖼️ 按照原图横纵比生成 (Keep Original Ratio)</option>
+            </optgroup>
+            <optgroup label="流媒体与社媒横纵比 (Streaming & Social)">
+              <option value="16:9">📺 16:9 横屏流媒体 (B站 / YouTube / 宽屏复古)</option>
+              <option value="9:16">📱 9:16 竖屏短视频 (抖音 / TikTok / Shorts / 壁纸)</option>
+              <option value="4:3">🖥️ 4:3 经典复古电视 / CRT 标准画幅</option>
+              <option value="1:1">🟩 1:1 正方形 (表情包 / 头像 / INS)</option>
+              <option value="3:4">📕 3:4 竖版图文 (小红书 / 复古海报)</option>
+              <option value="21:9">🎬 21:9 超宽电影画幅 (Ultrawide Cinema)</option>
+            </optgroup>
+            <optgroup label="自由定制 (Custom Ratio & Resolution)">
+              <option value="custom_ratio">📐 输入自定义横纵比 (Custom W : H)</option>
+              <option value="custom_px">🔢 输入自定义横纵像素分辨率 (Custom W × H px)</option>
+            </optgroup>
+          </select>
+
+          <!-- Custom Aspect Ratio Inputs (Shown when custom_ratio is selected) -->
+          <div id="customRatioInputs" class="hidden bg-retro-bg/80 border border-retro-border rounded-lg p-2.5 space-y-1.5">
+            <div class="text-[11px] text-slate-400" data-i18n="lblCustomRatioInput">输入自定义宽高比 (W : H)</div>
+            <div class="flex items-center gap-2">
+              <input id="inputRatioW" type="number" min="1" max="100" step="0.1" value="16" aria-label="Custom Ratio Width" class="w-full bg-retro-panel border border-retro-border rounded px-2 py-1 text-xs font-mono text-white">
+              <span class="font-mono text-slate-400 font-bold">:</span>
+              <input id="inputRatioH" type="number" min="1" max="100" step="0.1" value="10" aria-label="Custom Ratio Height" class="w-full bg-retro-panel border border-retro-border rounded px-2 py-1 text-xs font-mono text-white">
+            </div>
+          </div>
+
+          <!-- Custom Exact Pixel Resolution Inputs (Shown when custom_px is selected) -->
+          <div id="customPxInputs" class="hidden bg-retro-bg/80 border border-retro-border rounded-lg p-2.5 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] text-slate-400" data-i18n="lblCustomPxInput">自定义横纵分辨率 (16 ~ 1024 px)</span>
+              <label class="inline-flex items-center gap-1 text-[10px] text-emerald-400 cursor-pointer">
+                <input id="chkLockCustomPxRatio" type="checkbox" checked class="accent-emerald-500">
+                <span data-i18n="lblLockRatio">锁定原图比例</span>
+              </label>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="flex-1">
+                <span class="text-[10px] text-slate-400 block mb-0.5">宽 Width (px)</span>
+                <input id="inputCustomW" type="number" min="16" max="1024" step="1" value="320" class="w-full bg-retro-panel border border-retro-border rounded px-2 py-1 text-xs font-mono text-white">
+              </div>
+              <span class="font-mono text-slate-400 pt-4">×</span>
+              <div class="flex-1">
+                <span class="text-[10px] text-slate-400 block mb-0.5">高 Height (px)</span>
+                <input id="inputCustomH" type="number" min="16" max="1024" step="1" value="180" class="w-full bg-retro-panel border border-retro-border rounded px-2 py-1 text-xs font-mono text-white">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resolution Multiplier & Fit Mode -->
+        <div id="resScaleAndFitRow" class="grid grid-cols-2 gap-2 pt-1">
+          <div>
+            <label for="selectResScale" class="block text-[11px] text-slate-400 mb-1" data-i18n="lblResMode">目标分辨率倍数</label>
+            <select id="selectResScale" class="w-full bg-retro-bg border border-retro-border rounded-lg px-2 py-1.5 text-xs text-slate-200 outline-none">
+              <option value="0.25">0.25x 极低像素 (Micro)</option>
+              <option value="0.5">0.5x 超低像素风格</option>
+              <option value="0.75">0.75x 紧凑低分风格</option>
+              <option value="1" selected>1.0x 原生硬件分辨率</option>
+              <option value="1.5">1.5x 高清精细瓦片</option>
+              <option value="2">2.0x 双倍高密像素 (HD)</option>
+              <option value="3">3.0x 三倍超清瓦片</option>
+              <option value="4">4.0x 四倍极限高分</option>
+              <option value="custom">⚡ 自定义倍数滑块...</option>
+            </select>
+          </div>
+          <div>
+            <label for="selectFitMode" class="block text-[11px] text-slate-400 mb-1" data-i18n="lblFitMode">画面裁切/适配方式</label>
+            <select id="selectFitMode" class="w-full bg-retro-bg border border-retro-border rounded-lg px-2 py-1.5 text-xs text-slate-200 outline-none">
+              <option value="cover">居中裁切铺满 (Cover)</option>
+              <option value="contain">完整保留加黑边 (Contain)</option>
+              <option value="stretch">强制拉伸适配 (Stretch)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Custom Resolution Scale Slider (Shown when selectResScale === 'custom') -->
+        <div id="customScaleSliderBox" class="hidden bg-retro-bg/80 border border-retro-border rounded-lg p-2.5">
+          <div class="flex justify-between text-xs mb-1">
+            <span class="text-slate-300" data-i18n="lblCustomScale">自定义分辨率倍数 (0.2x ~ 4.5x)</span>
+            <span id="valCustomResScale" class="font-mono text-emerald-400">1.25x</span>
+          </div>
+          <input id="rangeCustomResScale" type="range" min="0.2" max="4.5" step="0.05" value="1.25" class="w-full">
+        </div>
+
         <!-- Hardware Specification Summary Pill Box -->
         <div class="bg-retro-bg/90 border border-retro-border rounded-lg p-2.5 text-[11px] space-y-1.5">
           <div class="flex justify-between">
-            <span class="text-slate-400" data-i18n="specRes">原生分辨率:</span>
+            <span class="text-slate-400" data-i18n="specRes">实际生成分辨率:</span>
             <span id="specResVal" class="font-mono text-emerald-300 font-medium">256 × 240 (PAR 1:1)</span>
           </div>
           <div class="flex justify-between">
@@ -220,8 +386,8 @@
           </div>
         </div>
 
-        <!-- Hardware Constraint Strictness Mode -->
-        <div class="space-y-2 pt-1">
+        <!-- Hardware Constraint Strictness Mode (Pro Detail) -->
+        <div id="proClashContainer" class="space-y-2 pt-1">
           <div class="flex items-center justify-between">
             <label for="selectClashMode" class="text-xs text-slate-300 font-medium" data-i18n="lblClashMode">硬件属性块限制等级</label>
             <span class="text-[10px] font-mono text-emerald-400" id="clashModeHint">Authentic Tile Clash</span>
@@ -232,30 +398,10 @@
             <option value="global_palette">仅限制硬件分辨率与全局色盘 (无网格颜色冲突)</option>
           </select>
         </div>
-
-        <!-- Resolution Scaling / Crop Mode -->
-        <div class="grid grid-cols-2 gap-2 pt-1">
-          <div>
-            <label for="selectResScale" class="block text-[11px] text-slate-400 mb-1" data-i18n="lblResMode">目标分辨率比例</label>
-            <select id="selectResScale" class="w-full bg-retro-bg border border-retro-border rounded-lg px-2 py-1.5 text-xs text-slate-200 outline-none">
-              <option value="1">1.0x 原生硬件分辨率</option>
-              <option value="0.5">0.5x 超低像素风格</option>
-              <option value="1.5">1.5x 高清精细瓦片</option>
-            </select>
-          </div>
-          <div>
-            <label for="selectFitMode" class="block text-[11px] text-slate-400 mb-1" data-i18n="lblFitMode">画面裁切/适配方式</label>
-            <select id="selectFitMode" class="w-full bg-retro-bg border border-retro-border rounded-lg px-2 py-1.5 text-xs text-slate-200 outline-none">
-              <option value="cover">居中裁切铺满 (Cover)</option>
-              <option value="contain">完整保留加黑边 (Contain)</option>
-              <option value="stretch">强制拉伸适配 (Stretch)</option>
-            </select>
-          </div>
-        </div>
       </section>
 
       <!-- 3. Dithering & Temporal Stability Engine -->
-      <section class="bg-retro-panel border border-retro-border rounded-xl p-3.5 shadow-lg space-y-3">
+      <section id="secDitherCard" class="bg-retro-panel border border-retro-border rounded-xl p-3.5 shadow-lg space-y-3">
         <div class="flex items-center justify-between">
           <h2 class="text-xs font-semibold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
             <span>03</span>
@@ -309,7 +455,7 @@
       </section>
 
       <!-- 4. Pre-processing Color Adjustments -->
-      <section class="bg-retro-panel border border-retro-border rounded-xl p-3.5 shadow-lg space-y-2.5">
+      <section id="secAdjustCard" class="bg-retro-panel border border-retro-border rounded-xl p-3.5 shadow-lg space-y-2.5">
         <div class="flex items-center justify-between">
           <h2 class="text-xs font-semibold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
             <span>04</span>
@@ -343,10 +489,16 @@
         </div>
       </section>
 
+      <!-- Simple Mode Hint Banner (Shown only when Simple Mode is active) -->
+      <div id="simpleModeBanner" class="hidden bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-3 text-xs flex items-center justify-between gap-2">
+        <span class="text-slate-300" data-i18n="simpleBannerText">当前为极简模式，已自动配置最优防闪烁抖动与调色参数。</span>
+        <button id="btnExpandProFromBanner" class="px-2.5 py-1 rounded-lg bg-emerald-500 text-slate-950 font-semibold shrink-0" data-i18n="btnSwitchPro">展开高级调节</button>
+      </div>
+
     </aside>
 
     <!-- RIGHT COLUMN: Interactive Viewport, Timeline, Tile Inspector & Export (8 cols on lg) -->
-    <section class="lg:col-span-8 xl:col-span-9 flex flex-col gap-4">
+    <section id="rightViewportCol" class="lg:col-span-8 xl:col-span-9 flex flex-col gap-4">
 
       <!-- Canvas Viewport Card -->
       <div class="bg-retro-panel border border-retro-border rounded-xl p-3.5 sm:p-4 shadow-lg flex flex-col gap-3">
@@ -386,7 +538,7 @@
         </div>
 
         <!-- Main Canvas Stage -->
-        <div id="canvasStage" class="relative checkerboard rounded-xl border border-retro-border min-h-[340px] sm:min-h-[430px] flex items-center justify-center p-3 overflow-auto select-none">
+        <div id="canvasStage" class="relative checkerboard rounded-xl border border-retro-border min-h-[280px] sm:min-h-[420px] flex items-center justify-center p-3 overflow-auto select-none">
 
           <!-- Side-by-Side Original Container (hidden in single view) -->
           <div id="origContainer" class="hidden flex-col items-center gap-1.5 mr-4">
@@ -439,7 +591,7 @@
           </div>
 
           <!-- Hover Tile Inspector Info -->
-          <div class="flex items-center gap-2 bg-retro-panel px-2.5 py-1 rounded border border-retro-border">
+          <div id="tileInspectorPill" class="flex items-center gap-2 bg-retro-panel px-2.5 py-1 rounded border border-retro-border">
             <span class="text-slate-400 font-mono text-[11px]" id="inspectorCoords">Tile: --</span>
             <div id="inspectorSwatches" class="flex items-center gap-1">
               <span class="text-[11px] text-slate-400" data-i18n="inspectorHint">鼠标悬停画布查看瓦片属性色板</span>
@@ -483,10 +635,10 @@
       </div>
 
       <!-- Bottom Grid: Active Hardware Palettes & Export Studio -->
-      <div class="grid grid-cols-1 xl:grid-cols-12 gap-4">
+      <div id="bottomStudioGrid" class="grid grid-cols-1 xl:grid-cols-12 gap-4">
 
         <!-- Hardware Sub-Palettes & System Master Palette Visualizer (7 cols) -->
-        <div class="xl:col-span-7 bg-retro-panel border border-retro-border rounded-xl p-3.5 shadow-lg flex flex-col justify-between gap-3">
+        <div id="secPalInspectorCard" class="xl:col-span-7 bg-retro-panel border border-retro-border rounded-xl p-3.5 shadow-lg flex flex-col justify-between gap-3">
           <div>
             <div class="flex items-center justify-between mb-2">
               <h3 class="text-xs font-semibold uppercase tracking-wider text-emerald-400" data-i18n="secPalInspector">当前激活硬件子色板与系统色盘</h3>
@@ -507,8 +659,8 @@
           </div>
         </div>
 
-        <!-- Export & Download Center (5 cols) -->
-        <div class="xl:col-span-5 bg-retro-panel border border-retro-border rounded-xl p-3.5 shadow-lg flex flex-col justify-between gap-3">
+        <!-- Export & Download Center (5 cols in Pro, 12 cols in Simple) -->
+        <div id="secExportCard" class="xl:col-span-5 bg-retro-panel border border-retro-border rounded-xl p-3.5 shadow-lg flex flex-col justify-between gap-3">
           <div class="space-y-2.5">
             <div class="flex items-center justify-between">
               <h3 class="text-xs font-semibold uppercase tracking-wider text-emerald-400" data-i18n="secExport">导出 8-Bit 图像与动画成品</h3>
@@ -546,12 +698,12 @@
               <span data-i18n="btnExportPng">导出当前帧 PNG</span>
             </button>
 
-            <button id="btnExportSheet" class="px-3 py-2 rounded-xl bg-retro-bg hover:bg-slate-800 text-slate-200 text-xs border border-retro-border flex items-center justify-center gap-1.5 transition">
+            <button id="btnExportSheet" class="pro-export-btn px-3 py-2 rounded-xl bg-retro-bg hover:bg-slate-800 text-slate-200 text-xs border border-retro-border flex items-center justify-center gap-1.5 transition">
               <span>🧩</span>
               <span data-i18n="btnExportSheet">导出序列帧精灵表 (Sprite Sheet)</span>
             </button>
 
-            <button id="btnExportJson" class="px-3 py-2 rounded-xl bg-retro-bg hover:bg-slate-800 text-slate-200 text-xs border border-retro-border flex items-center justify-center gap-1.5 transition">
+            <button id="btnExportJson" class="pro-export-btn px-3 py-2 rounded-xl bg-retro-bg hover:bg-slate-800 text-slate-200 text-xs border border-retro-border flex items-center justify-center gap-1.5 transition">
               <span>📄</span>
               <span data-i18n="btnExportJson">导出硬件色板与瓦片数据 JSON</span>
             </button>
@@ -618,7 +770,7 @@
         year: '1983 · Ricoh 2C02 PPU',
         width: 256,
         height: 240,
-        par: 1, // Pixel aspect ratio
+        par: 1,
         blockW: 16,
         blockH: 16,
         fineBlockW: 8,
@@ -627,7 +779,6 @@
         ruleDescEn: '16×16 Attribute Block picks 1 of 4 Sub-Palettes (1 shared BG + 3 colors)',
         palDesc: '54 Colors (NTSC 2C02 Hardware ROM)',
         clashType: 'nes_subpalettes',
-        // Canonical 54-color NES 2C02 NTSC Palette
         palette: [
           [84,84,84], [0,30,116], [8,16,144], [48,0,136], [68,0,100], [92,0,48], [84,4,0], [60,24,0],
           [32,42,0], [8,58,0], [0,64,0], [0,60,0], [0,50,60], [0,0,0],
@@ -698,7 +849,6 @@
         ruleDescEn: '8×8 Tiles · 8 Sub-Palettes of 4 Colors (15-bit RGB555)',
         palDesc: '32 Active out of 32,768 (RGB555)',
         clashType: 'gbc_subpalettes',
-        // Representative 64-color RGB555 hardware gamut grid for fast deterministic matching
         palette: (function() {
           const pal = [];
           const levels = [0, 82, 173, 255];
@@ -728,10 +878,8 @@
         palDesc: '15 Colors (7 Hues × Normal/Bright + Black)',
         clashType: 'zx_clash',
         palette: [
-          // Normal bank (0..7)
           [0, 0, 0], [0, 0, 215], [215, 0, 0], [215, 0, 215],
           [0, 215, 0], [0, 215, 215], [215, 215, 0], [215, 215, 215],
-          // Bright bank (8..15)
           [0, 0, 0], [0, 0, 255], [255, 0, 0], [255, 0, 255],
           [0, 255, 0], [0, 255, 255], [255, 255, 0], [255, 255, 255]
         ]
@@ -742,7 +890,7 @@
         year: '1982 · MOS VIC-II',
         width: 160,
         height: 200,
-        par: 2, // 2:1 wide pixels (rendered as 320x200)
+        par: 2,
         blockW: 4,
         blockH: 8,
         fineBlockW: 4,
@@ -840,12 +988,12 @@
         palDesc: '6 Colors (NTSC Phase Artifact)',
         clashType: 'apple2_clash',
         palette: [
-          [0, 0, 0],       // 0 Black
-          [255, 255, 255], // 1 White
-          [32, 192, 32],   // 2 Green (Group A)
-          [160, 48, 240],  // 3 Violet (Group A)
-          [240, 96, 16],   // 4 Orange (Group B)
-          [16, 128, 240]   // 5 Blue (Group B)
+          [0, 0, 0],
+          [255, 255, 255],
+          [32, 192, 32],
+          [160, 48, 240],
+          [240, 96, 16],
+          [16, 128, 240]
         ]
       },
       pico8: {
@@ -873,7 +1021,7 @@
     };
 
     /*************************************************************************
-     * 2. ORDERED DITHERING MATRICES & ERROR DIFFUSION KERNELS
+     * 2. ORDERED DITHERING MATRICES
      *************************************************************************/
     const BAYER_2X2 = [
       [0, 2],
@@ -904,14 +1052,12 @@
 
     /*************************************************************************
      * 3. PURE-JS BINARY GIF89a ENCODER (LZW Compression + Looping Extension)
-     *    Self-contained so GIF export works 100% offline & in any sandbox
      *************************************************************************/
     class Gif89Encoder {
       constructor(width, height, globalPaletteRgb) {
         this.width = width;
         this.height = height;
         this.bytes = [];
-        // Pad palette to power of 2 (up to 256)
         let pow2 = 2;
         while (pow2 < globalPaletteRgb.length && pow2 < 256) pow2 <<= 1;
         this.paletteSize = pow2;
@@ -934,45 +1080,41 @@
         this.writeShort(this.height);
         const gctFlag = 0x80 | ((this.colorDepth - 1) << 4) | (this.colorDepth - 1);
         this.writeByte(gctFlag);
-        this.writeByte(0); // Background color index
-        this.writeByte(0); // Pixel aspect ratio
+        this.writeByte(0);
+        this.writeByte(0);
         for (let i = 0; i < this.palette.length; i++) {
           this.writeByte(this.palette[i]);
         }
-        // NETSCAPE2.0 Infinite Loop Application Extension
         this.writeByte(0x21);
         this.writeByte(0xff);
         this.writeByte(11);
         this.writeString('NETSCAPE2.0');
         this.writeByte(3);
         this.writeByte(1);
-        this.writeShort(0); // Loop forever
+        this.writeShort(0);
         this.writeByte(0);
       }
 
       addFrame(indexedPixels, delayMs = 80) {
-        // Graphic Control Extension
         this.writeByte(0x21);
         this.writeByte(0xf9);
         this.writeByte(4);
-        this.writeByte(0x04); // Disposal: do not dispose
+        this.writeByte(0x04);
         this.writeShort(Math.max(2, Math.round(delayMs / 10)));
-        this.writeByte(0); // Transparent index (unused)
+        this.writeByte(0);
         this.writeByte(0);
 
-        // Image Descriptor
         this.writeByte(0x2c);
         this.writeShort(0);
         this.writeShort(0);
         this.writeShort(this.width);
         this.writeShort(this.height);
-        this.writeByte(0); // Use Global Color Table
+        this.writeByte(0);
 
-        // LZW Compression
         const minCodeSize = Math.max(2, this.colorDepth);
         this.writeByte(minCodeSize);
         this.lzwEncode(indexedPixels, minCodeSize);
-        this.writeByte(0); // Block terminator
+        this.writeByte(0);
       }
 
       lzwEncode(indexStream, minCodeSize) {
@@ -982,7 +1124,6 @@
         let nextCode = eoiCode + 1;
         const maxCodeLimit = 4096;
 
-        // Dictionary using flat Int32Array table: (prefix << 8) | suffix -> code
         const dict = new Int32Array(4096 * 256);
         dict.fill(-1);
 
@@ -1050,7 +1191,7 @@
       }
 
       finish() {
-        this.writeByte(0x3b); // GIF Trailer
+        this.writeByte(0x3b);
         return new Uint8Array(this.bytes);
       }
     }
@@ -1060,20 +1201,32 @@
      *************************************************************************/
     const state = {
       lang: 'zh',
-      sourceFrames: [],     // Array of { imageData, delay } at source resolution
-      processedFrames: [],  // Array of { imageData, width, height, par, subPalettes, blockMap, usedColorsCount }
+      uiComplexity: 'pro',      // 'simple' | 'pro'
+      themeMode: 'dark',        // 'system' | 'dark' | 'light'
+      deviceMode: 'auto',       // 'auto' | 'desktop' | 'mobile'
+      activeMobileTab: 'input', // 'input' | 'hardware' | 'dither' | 'export'
+      isMobileEffective: false,
+
+      sourceFrames: [],
+      processedFrames: [],
       currentFrameIdx: 0,
       isPlaying: true,
       playTimer: null,
-      viewMode: 'output',   // 'output' | 'side' | 'split'
+      viewMode: 'output',
       splitPos: 0.5,
-      zoomMode: 'fit',      // 'fit' | 1 | 2 | 3
+      zoomMode: 'fit',
       showGrid: false,
       crtEnabled: false,
       activeDemo: 'synth',
 
-      // Conversion parameters
+      // Conversion & Aspect Ratio / Resolution parameters
       systemId: 'nes',
+      aspectMode: 'native',     // 'native' | 'original' | '16:9' | '9:16' | '4:3' | '1:1' | '3:4' | '21:9' | 'custom_ratio' | 'custom_px'
+      customRatioW: 16,
+      customRatioH: 10,
+      customPxW: 320,
+      customPxH: 180,
+      lockCustomPxRatio: true,
       clashMode: 'strict',
       resScale: 1,
       fitMode: 'cover',
@@ -1087,6 +1240,61 @@
       gifSpeed: 1,
       frameStep: 1
     };
+
+    function gcd(a, b) {
+      a = Math.abs(Math.round(a));
+      b = Math.abs(Math.round(b));
+      while (b) {
+        const t = b;
+        b = a % b;
+        a = t;
+      }
+      return a || 1;
+    }
+
+    // Compute exact target width & height based on aspectMode, console spec, and resScale
+    function computeTargetDimensions(sys) {
+      const srcFrame = state.sourceFrames[0];
+      const srcW = srcFrame ? srcFrame.imageData.width : sys.width;
+      const srcH = srcFrame ? srcFrame.imageData.height : sys.height;
+      const scale = state.resScale || 1;
+
+      if (state.aspectMode === 'custom_px') {
+        const w = Math.max(16, Math.min(1024, Math.round(state.customPxW)));
+        const h = Math.max(16, Math.min(1024, Math.round(state.customPxH)));
+        return { targetW: w, targetH: h };
+      }
+
+      if (state.aspectMode === 'native') {
+        return {
+          targetW: Math.max(16, Math.min(1024, Math.round(sys.width * scale))),
+          targetH: Math.max(16, Math.min(1024, Math.round(sys.height * scale)))
+        };
+      }
+
+      // Determine desired visual aspect ratio (W / H)
+      let desiredVisualRatio = (sys.width * sys.par) / sys.height;
+      if (state.aspectMode === 'original') {
+        desiredVisualRatio = srcW / srcH;
+      } else if (state.aspectMode === 'custom_ratio') {
+        desiredVisualRatio = Math.max(0.1, state.customRatioW) / Math.max(0.1, state.customRatioH);
+      } else if (state.aspectMode.includes(':')) {
+        const parts = state.aspectMode.split(':').map(Number);
+        if (parts[0] > 0 && parts[1] > 0) {
+          desiredVisualRatio = parts[0] / parts[1];
+        }
+      }
+
+      // Preserve the console's native visual pixel budget at 1.0x, then multiply by scale
+      const baseVisualArea = (sys.width * sys.par) * sys.height;
+      const scaledVisualArea = baseVisualArea * (scale * scale);
+      const visualH = Math.sqrt(scaledVisualArea / desiredVisualRatio);
+      const visualW = visualH * desiredVisualRatio;
+
+      const targetW = Math.max(16, Math.min(1024, Math.round(visualW / sys.par)));
+      const targetH = Math.max(16, Math.min(1024, Math.round(visualH)));
+      return { targetW, targetH };
+    }
 
     // Fast color distance function
     function colorDistanceSq(r1, g1, b1, r2, g2, b2, metric) {
@@ -1102,7 +1310,6 @@
         const dy = y1 - y2;
         return dy * dy * 4 + dr * dr * 0.3 + dg * dg * 0.5 + db * db * 0.2;
       }
-      // Default: Redmean perceptual weighted RGB
       const rmean = (r1 + r2) >> 1;
       return (((512 + rmean) * dr * dr) >> 8) + 4 * dg * dg + (((767 - rmean) * db * db) >> 8);
     }
@@ -1125,7 +1332,6 @@
       return v < 0 ? 0 : (v > 255 ? 255 : (v | 0));
     }
 
-    // Pre-process pixel (brightness, contrast, saturation)
     function applyColorAdjustments(srcData, brightness, contrast, saturation) {
       const out = new Uint8ClampedArray(srcData.length);
       const cFactor = (259 * (contrast + 255)) / (255 * (259 - contrast));
@@ -1135,12 +1341,10 @@
         let g = srcData[i + 1] + brightness;
         let b = srcData[i + 2] + brightness;
 
-        // Contrast
         r = cFactor * (r - 128) + 128;
         g = cFactor * (g - 128) + 128;
         b = cFactor * (b - 128) + 128;
 
-        // Saturation
         const luma = 0.299 * r + 0.587 * g + 0.114 * b;
         r = luma + (r - luma) * sFactor;
         g = luma + (g - luma) * sFactor;
@@ -1156,14 +1360,11 @@
 
     /*************************************************************************
      * 5. HARDWARE ATTRIBUTE BLOCK & SUB-PALETTE SOLVER
-     *    Models real NES 16x16 attribute tables, ZX Spectrum 8x8 clash,
-     *    C64 4x8 multicolor RAM, GBC 8x8 tile palettes, etc.
      *************************************************************************/
     function buildGlobalHardwareConfig(pixels, width, height, sys, clashMode, metric) {
       const masterPal = sys.palette;
       const nMaster = masterPal.length;
 
-      // Map every pixel to its nearest master palette index & build frequency table
       const freq = new Int32Array(nMaster);
       const nearestMap = new Uint8Array(width * height);
       for (let i = 0, p = 0; i < pixels.length; i += 4, p++) {
@@ -1184,10 +1385,8 @@
       const cols = Math.ceil(width / bw);
       const rows = Math.ceil(height / bh);
 
-      // CASE A: NES 4 Background Sub-Palettes (1 shared universal backdrop + 3 colors per sub-palette)
       if (sys.clashType === 'nes_subpalettes') {
-        // 1. Choose shared backdrop color (most frequent dark/dominant color)
-        let backdropIdx = 13; // Default black
+        let backdropIdx = 13;
         let maxScore = -1;
         for (let c = 0; c < nMaster; c++) {
           const luma = 0.299 * masterPal[c][0] + 0.587 * masterPal[c][1] + 0.114 * masterPal[c][2];
@@ -1198,7 +1397,6 @@
           }
         }
 
-        // 2. Collect top 12 distinct colors globally (excluding backdrop) by frequency & perceptual diversity
         const candidates = [];
         const used = new Uint8Array(nMaster);
         used[backdropIdx] = 1;
@@ -1208,7 +1406,6 @@
           let bestVal = -1;
           for (let c = 0; c < nMaster; c++) {
             if (used[c] || freq[c] === 0) continue;
-            // Encourage perceptual spread from already chosen candidates
             let minDist = 100000;
             for (const prev of candidates) {
               const d = colorDistanceSq(
@@ -1233,7 +1430,6 @@
           candidates.push(candidates[candidates.length - 1] || 0);
         }
 
-        // 3. Build 4 NES Sub-palettes by clustering block color co-occurrences
         const subPals = [];
         for (let p = 0; p < 4; p++) {
           const c1 = candidates[p * 3] ?? 0;
@@ -1246,12 +1442,10 @@
           });
         }
 
-        // Refine each of the 4 sub-palettes over 2 passes of block assignment (k-means on blocks)
         for (let iter = 0; iter < 2; iter++) {
           const buckets = [new Int32Array(nMaster), new Int32Array(nMaster), new Int32Array(nMaster), new Int32Array(nMaster)];
           for (let by = 0; by < rows; by++) {
             for (let bx = 0; bx < cols; bx++) {
-              // Pick best sub-palette for this block
               let bestP = 0;
               let bestErr = Infinity;
               for (let p = 0; p < 4; p++) {
@@ -1270,7 +1464,6 @@
                   bestP = p;
                 }
               }
-              // Accumulate master color frequencies for this sub-palette bucket
               for (let y = by * bh; y < Math.min(height, (by + 1) * bh); y++) {
                 for (let x = bx * bw; x < Math.min(width, (bx + 1) * bw); x++) {
                   const mIdx = nearestMap[y * width + x];
@@ -1279,7 +1472,6 @@
               }
             }
           }
-          // Update top 3 colors for each bucket
           for (let p = 0; p < 4; p++) {
             const bFreq = buckets[p];
             const picked = [backdropIdx];
@@ -1314,7 +1506,6 @@
         return { mode: 'subpalettes', bw, bh, subPalettes: subPals };
       }
 
-      // CASE B: C64 Multicolor (3 shared global colors + 1 unique color RAM per 4x8 block)
       if (sys.clashType === 'c64_multicolor') {
         const sharedIndices = [];
         for (let k = 0; k < 3; k++) {
@@ -1354,13 +1545,11 @@
         };
       }
 
-      // CASE C: GBC 8 Sub-Palettes of 4 Colors OR PICO-8 / SMS Tile Sub-Palettes
       if (sys.clashType === 'gbc_subpalettes' || sys.clashType === 'pico8_tiles' || sys.clashType === 'sms_subpalettes') {
         const numPals = sys.clashType === 'sms_subpalettes' ? 2 : (sys.clashType === 'gbc_subpalettes' ? 6 : 4);
         const colorsPerPal = sys.clashType === 'sms_subpalettes' ? 8 : 4;
         const subPals = [];
 
-        // Extract top diverse colors across image
         const ranked = [];
         for (let c = 0; c < nMaster; c++) {
           if (freq[c] > 0) ranked.push({ c, count: freq[c] });
@@ -1382,7 +1571,6 @@
         return { mode: 'subpalettes', bw, bh, subPalettes: subPals };
       }
 
-      // CASE D: ZX Spectrum (8x8 max 2 colors in same bright bank), C64 Hires / MSX (2 colors per block), Apple II (7x1 group)
       return {
         mode: sys.clashType,
         bw,
@@ -1396,7 +1584,6 @@
       };
     }
 
-    // Solve allowed palette for every hardware block (bx, by) in a frame
     function buildBlockPalettesForFrame(pixels, width, height, sys, hwConfig, metric) {
       const masterPal = sys.palette;
       if (hwConfig.mode === 'global') {
@@ -1423,7 +1610,6 @@
           const y1 = Math.min(height, y0 + bh);
 
           if (hwConfig.mode === 'subpalettes') {
-            // Pick best sub-palette out of hwConfig.subPalettes
             let bestP = 0;
             let bestErr = Infinity;
             for (let p = 0; p < hwConfig.subPalettes.length; p++) {
@@ -1447,7 +1633,6 @@
               colors: hwConfig.subPalettes[bestP].colors
             };
           } else if (hwConfig.mode === 'c64_multicolor') {
-            // 3 global shared colors + 1 best Color RAM color for this 4x8 block
             const baseCols = hwConfig.sharedColors;
             let bestRamColor = masterPal[0];
             let bestErr = Infinity;
@@ -1472,7 +1657,6 @@
               colors: [baseCols[0], baseCols[1], baseCols[2], bestRamColor]
             };
           } else if (hwConfig.mode === 'zx_clash' || hwConfig.mode === 'two_color_block') {
-            // Find the top 2 colors in this block (for ZX Spectrum, within either Normal 0..7 or Bright 8..15 bank)
             const localCounts = new Int32Array(masterPal.length);
             for (let y = y0; y < y1; y++) {
               for (let x = x0; x < x1; x++) {
@@ -1484,7 +1668,6 @@
 
             let c1 = 0, c2 = 1;
             if (hwConfig.mode === 'zx_clash') {
-              // Compare Normal Bank (0..7) vs Bright Bank (8..15)
               let normalScore = 0, brightScore = 0;
               for (let i = 0; i < 8; i++) normalScore += localCounts[i];
               for (let i = 8; i < 16; i++) brightScore += localCounts[i];
@@ -1503,7 +1686,6 @@
               c1 = first;
               c2 = second;
             } else {
-              // Generic 2-color block (C64 Hires 8x8 or MSX 8x1)
               let max1 = -1, max2 = -1;
               for (let i = 0; i < masterPal.length; i++) {
                 if (localCounts[i] > max1) {
@@ -1519,7 +1701,6 @@
               colors: [masterPal[c1], masterPal[c2]]
             };
           } else if (hwConfig.mode === 'apple2_clash') {
-            // Apple II: Group A [Black, White, Green, Violet] vs Group B [Black, White, Orange, Blue]
             const groupA = [masterPal[0], masterPal[1], masterPal[2], masterPal[3]];
             const groupB = [masterPal[0], masterPal[1], masterPal[4], masterPal[5]];
             let errA = 0, errB = 0;
@@ -1596,7 +1777,6 @@
           }
         }
       } else {
-        // Error Diffusion Dithering (Floyd-Steinberg, Atkinson, Sierra Lite)
         const work = new Float32Array(srcAdjusted.length);
         for (let i = 0; i < srcAdjusted.length; i++) work[i] = srcAdjusted[i];
 
@@ -1678,7 +1858,6 @@
       srcWorkCanvas.height = sourceImageData.height;
       srcWorkCtx.putImageData(sourceImageData, 0, 0);
 
-      // Account for hardware wide pixels (e.g. C64 Multicolor 2:1 PAR)
       const displayTargetW = targetW * par;
       const srcRatio = sourceImageData.width / sourceImageData.height;
       const dstRatio = displayTargetW / targetH;
@@ -1720,8 +1899,7 @@
       if (state.sourceFrames.length === 0) return;
 
       const sys = HARDWARE_SYSTEMS[state.systemId];
-      const targetW = Math.max(32, Math.round(sys.width * state.resScale));
-      const targetH = Math.max(32, Math.round(sys.height * state.resScale));
+      const { targetW, targetH } = computeTargetDimensions(sys);
       const step = state.sourceFrames.length > 1 ? state.frameStep : 1;
 
       const activeSourceFrames = [];
@@ -1827,12 +2005,12 @@
       let scale = 2;
       if (state.zoomMode === 'fit') {
         const stage = document.getElementById('canvasStage');
-        const availW = Math.max(240, (stage.clientWidth || 640) - (state.viewMode === 'side' ? 60 : 32));
+        const availW = Math.max(220, (stage.clientWidth || 640) - (state.viewMode === 'side' ? 60 : 32));
         const maxW = state.viewMode === 'side' ? availW / 2 : availW;
-        const maxH = 440;
+        const maxH = state.isMobileEffective ? 300 : 440;
         scale = Math.min(maxW / baseW, maxH / baseH);
         if (scale >= 1.5) scale = Math.floor(scale);
-        scale = Math.max(1, Math.min(4, scale));
+        scale = Math.max(0.5, Math.min(4, scale));
       } else {
         scale = Number(state.zoomMode) || 2;
       }
@@ -1848,14 +2026,12 @@
       const frame = state.processedFrames[state.currentFrameIdx] || state.processedFrames[0];
       const { dispW, dispH } = getDisplayDimensions(frame);
 
-      // 1. Render 8-Bit Output Canvas
       canvasOutput.width = frame.width;
       canvasOutput.height = frame.height;
       canvasOutput.style.width = `${dispW}px`;
       canvasOutput.style.height = `${dispH}px`;
       ctxOutput.putImageData(frame.imageData, 0, 0);
 
-      // 2. Side-by-side or Split Original Canvas
       const origContainer = document.getElementById('origContainer');
       const outputTopLabel = document.getElementById('outputTopLabel');
       const splitHandle = document.getElementById('splitHandle');
@@ -1897,7 +2073,6 @@
         splitHandle.classList.add('hidden');
       }
 
-      // 3. Render Overlay (Attribute Grid + Hovered Tile Highlight)
       canvasOverlay.width = dispW;
       canvasOverlay.height = dispH;
       canvasOverlay.style.width = `${dispW}px`;
@@ -1936,7 +2111,6 @@
         ctxOverlay.strokeRect(hx + 1, hy + 1, Math.max(2, hw - 2), Math.max(2, hh - 2));
       }
 
-      // 4. Update Stats Bar
       document.getElementById('statResText').textContent =
         frame.par > 1 ? `${frame.width}×${frame.height} (Display ${frame.width * frame.par}×${frame.height})` : `${frame.width} × ${frame.height}`;
       document.getElementById('statColorsText').textContent = `${frame.usedColorsCount} Colors`;
@@ -1951,7 +2125,6 @@
       const w = 256, h = 240;
 
       if (type === 'synth') {
-        // 16-Frame Animated Outrun Synthwave Sunset & Moving Grid
         const numFrames = 16;
         for (let f = 0; f < numFrames; f++) {
           const c = document.createElement('canvas');
@@ -1959,7 +2132,6 @@
           const ctx = c.getContext('2d');
           const t = f / numFrames;
 
-          // Sky gradient
           const sky = ctx.createLinearGradient(0, 0, 0, 145);
           sky.addColorStop(0, '#090426');
           sky.addColorStop(0.45, '#3b0d54');
@@ -1968,7 +2140,6 @@
           ctx.fillStyle = sky;
           ctx.fillRect(0, 0, w, 145);
 
-          // Twinkling stars
           const starSeeds = [[24,22],[68,18],[115,35],[195,16],[230,42],[44,62],[158,28],[212,68]];
           starSeeds.forEach(([sx, sy], idx) => {
             const bright = ((f + idx * 3) % 4 === 0) ? '#ffffff' : '#94a3b8';
@@ -1976,7 +2147,6 @@
             ctx.fillRect(sx, sy, 2, 2);
           });
 
-          // Retro Striped Sun
           const sunGrad = ctx.createLinearGradient(0, 50, 0, 138);
           sunGrad.addColorStop(0, '#ffee55');
           sunGrad.addColorStop(0.5, '#ff6b2b');
@@ -1986,7 +2156,6 @@
           ctx.arc(128, 96, 44, 0, Math.PI * 2);
           ctx.fill();
 
-          // Moving horizontal sun scan cutouts
           ctx.fillStyle = '#3b0d54';
           for (let y = 98; y < 140; y += 8) {
             const offset = ((y - 98) + Math.floor(t * 8)) % 40;
@@ -1994,7 +2163,6 @@
             ctx.fillRect(80, 96 + offset, 96, stripeH);
           }
 
-          // Distant Mountains Silhouette
           ctx.fillStyle = '#180930';
           ctx.beginPath();
           ctx.moveTo(0, 145);
@@ -2003,7 +2171,6 @@
           ctx.closePath();
           ctx.fill();
 
-          // Ground & Moving 3D Perspective Grid
           const ground = ctx.createLinearGradient(0, 145, 0, h);
           ground.addColorStop(0, '#1a0633');
           ground.addColorStop(1, '#05020d');
@@ -2012,14 +2179,12 @@
 
           ctx.strokeStyle = '#00f0ff';
           ctx.lineWidth = 1.5;
-          // Perspective radial lines
           for (let gx = -180; gx <= 180; gx += 30) {
             ctx.beginPath();
             ctx.moveTo(128 + gx * 0.18, 145);
             ctx.lineTo(128 + gx * 1.4, h);
             ctx.stroke();
           }
-          // Scrolling horizontal grid lines
           for (let i = 0; i < 8; i++) {
             const p = ((i + t) / 8);
             const gy = 145 + Math.pow(p, 1.8) * (h - 145);
@@ -2030,24 +2195,20 @@
             ctx.stroke();
           }
 
-          // Sports Car Rear Silhouette bobbing slightly
           const carY = 186 + (f % 2 === 0 ? 0 : 1);
           ctx.fillStyle = '#111827';
           ctx.fillRect(86, carY, 84, 26);
           ctx.fillStyle = '#e11d48';
           ctx.fillRect(82, carY + 8, 92, 14);
-          // Tail lights
           ctx.fillStyle = '#fef08a';
           ctx.fillRect(86, carY + 11, 18, 6);
           ctx.fillRect(152, carY + 11, 18, 6);
-          // License plate
           ctx.fillStyle = '#38bdf8';
           ctx.fillRect(118, carY + 12, 20, 7);
 
           frames.push({ imageData: ctx.getImageData(0, 0, w, h), delay: 90 });
         }
       } else if (type === 'slime') {
-        // 12-Frame Animated Retro RPG Battle Scene
         const numFrames = 12;
         for (let f = 0; f < numFrames; f++) {
           const c = document.createElement('canvas');
@@ -2055,7 +2216,6 @@
           const ctx = c.getContext('2d');
           const phase = (f / numFrames) * Math.PI * 2;
 
-          // Dungeon brick background
           ctx.fillStyle = '#14182e';
           ctx.fillRect(0, 0, w, h);
           for (let y = 16; y < 150; y += 16) {
@@ -2066,7 +2226,6 @@
             }
           }
 
-          // Animated Torches on Left & Right
           [46, 210].forEach((tx, idx) => {
             const flicker = Math.sin(phase + idx) * 4;
             const glow = ctx.createRadialGradient(tx, 64, 4, tx, 64, 34 + flicker);
@@ -2081,7 +2240,6 @@
             ctx.fillRect(tx - 4, 68, 8, 22);
           });
 
-          // Bouncing King Slime Boss in Center
           const bounceY = Math.round(Math.abs(Math.sin(phase)) * 18);
           const squashX = bounceY < 4 ? 1.12 : 0.94;
           const squashY = bounceY < 4 ? 0.88 : 1.06;
@@ -2090,7 +2248,6 @@
           ctx.translate(128, 136 - bounceY);
           ctx.scale(squashX, squashY);
 
-          // Crown
           ctx.fillStyle = '#facc15';
           ctx.beginPath();
           ctx.moveTo(-24, -40);
@@ -2105,7 +2262,6 @@
           ctx.fillStyle = '#ef4444';
           ctx.fillRect(-4, -52, 8, 8);
 
-          // Slime Body
           const slimeGrad = ctx.createRadialGradient(-10, -24, 6, 0, -10, 46);
           slimeGrad.addColorStop(0, '#7dd3fc');
           slimeGrad.addColorStop(0.55, '#0284c7');
@@ -2115,7 +2271,6 @@
           ctx.arc(0, -10, 42, 0, Math.PI * 2);
           ctx.fill();
 
-          // Eyes & Smile
           ctx.fillStyle = '#ffffff';
           ctx.beginPath();
           ctx.arc(-14, -14, 8, 0, Math.PI * 2);
@@ -2132,20 +2287,17 @@
           ctx.fill();
           ctx.restore();
 
-          // Classic RPG Battle UI HUD Window at bottom
           ctx.fillStyle = '#000000';
           ctx.fillRect(14, 162, 228, 66);
           ctx.strokeStyle = '#ffffff';
           ctx.lineWidth = 3;
           ctx.strokeRect(16, 164, 224, 62);
 
-          // HP / MP Bars
           ctx.fillStyle = '#22c55e';
           ctx.fillRect(28, 178, 85, 10);
           ctx.fillStyle = '#38bdf8';
           ctx.fillRect(28, 198, 68, 10);
 
-          // Flashing Attack Cursor
           if (f % 2 === 0) {
             ctx.fillStyle = '#facc15';
             ctx.beginPath();
@@ -2162,7 +2314,6 @@
           frames.push({ imageData: ctx.getImageData(0, 0, w, h), delay: 100 });
         }
       } else if (type === 'cyber') {
-        // Static Rich Cyberpunk Street Scene
         const c = document.createElement('canvas');
         c.width = w; c.height = h;
         const ctx = c.getContext('2d');
@@ -2174,7 +2325,6 @@
         ctx.fillStyle = bg;
         ctx.fillRect(0, 0, w, h);
 
-        // Buildings
         const blds = [
           { x: 0, y: 20, w: 64, h: 170, c: '#0f172a', win: '#38bdf8' },
           { x: 58, y: 45, w: 52, h: 145, c: '#1e293b', win: '#f43f5e' },
@@ -2192,7 +2342,6 @@
           }
         });
 
-        // Neon Signboards
         ctx.fillStyle = '#ec4899';
         ctx.fillRect(28, 74, 48, 22);
         ctx.fillStyle = '#06b6d4';
@@ -2200,7 +2349,6 @@
         ctx.fillStyle = '#facc15';
         ctx.fillRect(92, 92, 72, 24);
 
-        // Wet Street Reflections
         const road = ctx.createLinearGradient(0, 185, 0, h);
         road.addColorStop(0, '#0f172a');
         road.addColorStop(1, '#020617');
@@ -2215,12 +2363,10 @@
 
         frames.push({ imageData: ctx.getImageData(0, 0, w, h), delay: 100 });
       } else {
-        // Color Calibration & Portrait Gradient Test Card
         const c = document.createElement('canvas');
         c.width = w; c.height = h;
         const ctx = c.getContext('2d');
 
-        // Rainbow Hue + Luma Sweep
         for (let y = 0; y < 140; y++) {
           for (let x = 0; x < w; x++) {
             const hue = (x / w) * 360;
@@ -2230,14 +2376,12 @@
           }
         }
 
-        // Grayscale Ramp
         for (let x = 0; x < w; x++) {
           const v = Math.round((x / w) * 255);
           ctx.fillStyle = `rgb(${v},${v},${v})`;
           ctx.fillRect(x, 140, 1, 32);
         }
 
-        // SMPTE Primary Color Bars & Skin-tone Spheres
         const bars = ['#ffffff', '#eab308', '#06b6d4', '#22c55e', '#d946ef', '#ef4444', '#3b82f6', '#000000'];
         const bw = w / bars.length;
         bars.forEach((col, idx) => {
@@ -2245,7 +2389,6 @@
           ctx.fillRect(idx * bw, 172, bw, 68);
         });
 
-        // 3D Shaded Sphere in Center for Dither & Clash Testing
         const sph = ctx.createRadialGradient(116, 76, 6, 128, 90, 48);
         sph.addColorStop(0, '#fff1f2');
         sph.addColorStop(0.4, '#fb7185');
@@ -2263,8 +2406,21 @@
     }
 
     /*************************************************************************
-     * 10. UPLOADED IMAGE & BINARY GIF89a DECODER (omggif + Native Fallback)
+     * 10. UPLOADED IMAGE & BINARY GIF89a DECODER
      *************************************************************************/
+    function updateOriginalAspectBadge() {
+      const f0 = state.sourceFrames[0];
+      if (!f0) return;
+      const w = f0.imageData.width;
+      const h = f0.imageData.height;
+      const g = gcd(w, h);
+      const rw = Math.round(w / g);
+      const rh = Math.round(h / g);
+      const ratioStr = (rw <= 64 && rh <= 64) ? `${rw}:${rh}` : `${(w / h).toFixed(2)}:1`;
+      document.getElementById('origRatioHint').textContent =
+        state.lang === 'zh' ? `原图 ${w}×${h} (${ratioStr})` : `Orig ${w}×${h} (${ratioStr})`;
+    }
+
     async function handleFileUpload(file) {
       if (!file) return;
       showLoading(true, state.lang === 'zh' ? '正在解析图像 / GIF 数据...' : 'Decoding Image / GIF...');
@@ -2272,7 +2428,7 @@
       try {
         const buffer = await file.arrayBuffer();
         const bytes = new Uint8Array(buffer);
-        const isGif = bytes[0] === 0x47 && bytes[1] === 0x49 && bytes[2] === 0x46; // 'GIF'
+        const isGif = bytes[0] === 0x47 && bytes[1] === 0x49 && bytes[2] === 0x46;
 
         if (isGif && typeof window.GifReader === 'function') {
           const reader = new window.GifReader(bytes);
@@ -2281,14 +2437,7 @@
           const numFrames = reader.numFrames();
           const decodedFrames = [];
 
-          // Compositing canvas to handle GIF disposal methods properly
-          const compCanvas = document.createElement('canvas');
-          compCanvas.width = gw;
-          compCanvas.height = gh;
-          const compCtx = compCanvas.getContext('2d', { willReadFrequently: true });
-
           const framePixels = new Uint8ClampedArray(gw * gh * 4);
-          // Fill dark backdrop initially
           for (let i = 0; i < framePixels.length; i += 4) {
             framePixels[i] = 15; framePixels[i + 1] = 20; framePixels[i + 2] = 28; framePixels[i + 3] = 255;
           }
@@ -2299,7 +2448,6 @@
             const prevCopy = info.disposal === 3 ? new Uint8ClampedArray(framePixels) : null;
 
             reader.decodeAndBlitFrameRGBA(f, framePixels);
-            // Ensure opaque alpha for hardware conversion
             for (let i = 3; i < framePixels.length; i += 4) {
               if (framePixels[i] < 128) {
                 framePixels[i - 3] = 15;
@@ -2316,7 +2464,6 @@
             });
 
             if (info.disposal === 2) {
-              // Restore to background
               for (let y = info.y; y < info.y + info.height; y++) {
                 for (let x = info.x; x < info.x + info.width; x++) {
                   const idx = (y * gw + x) * 4;
@@ -2333,7 +2480,6 @@
           state.isPlaying = decodedFrames.length > 1;
           document.getElementById('inputBadgeInfo').textContent = `${decodedFrames.length} Frames GIF (${gw}×${gh})`;
         } else {
-          // Standard static image (PNG / JPEG / WebP)
           const blob = new Blob([buffer], { type: file.type || 'image/png' });
           const url = URL.createObjectURL(blob);
           const img = await new Promise((resolve, reject) => {
@@ -2361,6 +2507,7 @@
           document.getElementById('inputBadgeInfo').textContent = `Static (${c.width}×${c.height})`;
         }
 
+        updateOriginalAspectBadge();
         runConversionPipeline();
         restartPlaybackLoop();
         showToast(state.lang === 'zh' ? `已加载: ${file.name}` : `Loaded: ${file.name}`);
@@ -2373,7 +2520,124 @@
     }
 
     /*************************************************************************
-     * 11. UI UPDATES, PALETTE SWATCHES & EXPORT HANDLERS
+     * 11. THEME ENGINE (LIGHT / DARK / SYSTEM) & DEVICE UI AUTO-DETECTION
+     *************************************************************************/
+    const darkMediaQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+
+    function applyThemeMode() {
+      let useDark = true;
+      if (state.themeMode === 'system') {
+        useDark = darkMediaQuery ? darkMediaQuery.matches : true;
+      } else {
+        useDark = state.themeMode === 'dark';
+      }
+      const root = document.documentElement;
+      if (useDark) {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
+      try { localStorage.setItem('retro8bit_theme', state.themeMode); } catch (e) {}
+    }
+
+    function detectIsMobileBrowser() {
+      const ua = navigator.userAgent || '';
+      const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+      const isNarrow = window.innerWidth < 768;
+      const isCoarseTouch = window.matchMedia && window.matchMedia('(pointer: coarse)').matches && window.innerWidth < 1024;
+      return isMobileUA || isNarrow || isCoarseTouch;
+    }
+
+    function applyDeviceAndComplexityLayout() {
+      const autoDetectedMobile = detectIsMobileBrowser();
+      if (state.deviceMode === 'auto') {
+        state.isMobileEffective = autoDetectedMobile;
+      } else {
+        state.isMobileEffective = state.deviceMode === 'mobile';
+      }
+
+      const badge = document.getElementById('deviceDetectedBadge');
+      const modeTag = state.deviceMode === 'auto' ? 'Auto' : 'Manual';
+      if (state.isMobileEffective) {
+        badge.textContent = `📱 Mobile UI (${modeTag})`;
+        badge.className = 'px-1.5 py-0.5 text-[10px] font-mono rounded bg-amber-500/15 text-amber-400 border border-amber-500/30';
+        document.body.classList.add('mobile-ui');
+      } else {
+        badge.textContent = `🖥️ Desktop UI (${modeTag})`;
+        badge.className = 'px-1.5 py-0.5 text-[10px] font-mono rounded bg-cyan-500/15 text-cyan-400 border border-cyan-500/30';
+        document.body.classList.remove('mobile-ui');
+      }
+
+      const mobileStepNav = document.getElementById('mobileStepNav');
+      const rightViewportCol = document.getElementById('rightViewportCol');
+      const leftSidebar = document.getElementById('leftSidebar');
+
+      const secInputCard = document.getElementById('secInputCard');
+      const secHardwareCard = document.getElementById('secHardwareCard');
+      const secDitherCard = document.getElementById('secDitherCard');
+      const secAdjustCard = document.getElementById('secAdjustCard');
+      const secPalInspectorCard = document.getElementById('secPalInspectorCard');
+      const secExportCard = document.getElementById('secExportCard');
+      const simpleModeBanner = document.getElementById('simpleModeBanner');
+      const proClashContainer = document.getElementById('proClashContainer');
+
+      // Update Simple / Pro button visual state
+      const btnSimple = document.getElementById('btnUiModeSimple');
+      const btnPro = document.getElementById('btnUiModePro');
+      if (state.uiComplexity === 'simple') {
+        btnSimple.className = 'px-2.5 py-1 rounded-md bg-emerald-500 text-slate-950 font-semibold transition';
+        btnPro.className = 'px-2.5 py-1 rounded-md text-slate-300 hover:text-white transition';
+      } else {
+        btnPro.className = 'px-2.5 py-1 rounded-md bg-emerald-500 text-slate-950 font-semibold transition';
+        btnSimple.className = 'px-2.5 py-1 rounded-md text-slate-300 hover:text-white transition';
+      }
+
+      if (state.isMobileEffective) {
+        // Put Canvas Viewport first on Mobile UI so user always sees live output at top
+        rightViewportCol.classList.add('-order-1');
+        leftSidebar.classList.add('order-1');
+        mobileStepNav.classList.remove('hidden');
+
+        // Filter visible cards according to active mobile step tab
+        secInputCard.classList.toggle('hidden', state.activeMobileTab !== 'input');
+        secHardwareCard.classList.toggle('hidden', state.activeMobileTab !== 'hardware');
+        secDitherCard.classList.toggle('hidden', state.activeMobileTab !== 'dither');
+        secAdjustCard.classList.toggle('hidden', state.activeMobileTab !== 'dither');
+        secPalInspectorCard.classList.toggle('hidden', state.activeMobileTab !== 'dither' || state.uiComplexity === 'simple');
+        secExportCard.classList.toggle('hidden', state.activeMobileTab !== 'export');
+        simpleModeBanner.classList.add('hidden');
+      } else {
+        rightViewportCol.classList.remove('-order-1');
+        leftSidebar.classList.remove('order-1');
+        mobileStepNav.classList.add('hidden');
+
+        secInputCard.classList.remove('hidden');
+        secHardwareCard.classList.remove('hidden');
+        secExportCard.classList.remove('hidden');
+
+        const isSimple = state.uiComplexity === 'simple';
+        secDitherCard.classList.toggle('hidden', isSimple);
+        secAdjustCard.classList.toggle('hidden', isSimple);
+        secPalInspectorCard.classList.toggle('hidden', isSimple);
+        proClashContainer.classList.toggle('hidden', isSimple);
+        simpleModeBanner.classList.toggle('hidden', !isSimple);
+
+        if (isSimple) {
+          secExportCard.className = 'xl:col-span-12 bg-retro-panel border border-retro-border rounded-xl p-3.5 shadow-lg flex flex-col justify-between gap-3';
+        } else {
+          secExportCard.className = 'xl:col-span-5 bg-retro-panel border border-retro-border rounded-xl p-3.5 shadow-lg flex flex-col justify-between gap-3';
+        }
+      }
+
+      document.querySelectorAll('.pro-export-btn').forEach(btn => {
+        btn.classList.toggle('hidden', state.uiComplexity === 'simple');
+      });
+
+      renderCurrentFrameToViewport();
+    }
+
+    /*************************************************************************
+     * 12. UI UPDATES, PALETTE SWATCHES & EXPORT HANDLERS
      *************************************************************************/
     function rgbToHex(c) {
       return '#' + [c[0], c[1], c[2]].map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase();
@@ -2381,16 +2645,19 @@
 
     function updateHardwareSpecUI() {
       const sys = HARDWARE_SYSTEMS[state.systemId];
-      const w = Math.round(sys.width * state.resScale);
-      const h = Math.round(sys.height * state.resScale);
+      const { targetW, targetH } = computeTargetDimensions(sys);
       document.getElementById('hwYearBadge').textContent = sys.year;
       document.getElementById('specResVal').textContent =
-        sys.par > 1 ? `${w} × ${h} (PAR ${sys.par}:1 Wide)` : `${w} × ${h} (PAR 1:1)`;
+        sys.par > 1 ? `${targetW} × ${targetH} (PAR ${sys.par}:1 Wide)` : `${targetW} × ${targetH} (PAR 1:1)`;
       document.getElementById('specPalVal').textContent = sys.palDesc;
       document.getElementById('specClashVal').textContent =
         state.lang === 'zh' ? sys.ruleDescZh : sys.ruleDescEn;
 
-      // Dither badge
+      // Toggle visibility of custom ratio / custom px inputs
+      document.getElementById('customRatioInputs').classList.toggle('hidden', state.aspectMode !== 'custom_ratio');
+      document.getElementById('customPxInputs').classList.toggle('hidden', state.aspectMode !== 'custom_px');
+      document.getElementById('resScaleAndFitRow').classList.toggle('hidden', state.aspectMode === 'custom_px');
+
       const isOrdered = ['bayer2', 'bayer4', 'bayer8', 'cluster4', 'scanline', 'none'].includes(state.ditherAlgo);
       const badge = document.getElementById('ditherStabilityBadge');
       if (isOrdered) {
@@ -2407,7 +2674,6 @@
       const frame = state.processedFrames[state.currentFrameIdx] || state.processedFrames[0];
       if (!frame) return;
 
-      // 1. Sub-palettes
       const subContainer = document.getElementById('subPalettesContainer');
       subContainer.innerHTML = '';
       const subPals = frame.hwConfig.subPalettes || [];
@@ -2433,7 +2699,6 @@
         subContainer.appendChild(card);
       });
 
-      // 2. Master System Palette
       const masterStrip = document.getElementById('masterPaletteStrip');
       masterStrip.innerHTML = '';
       document.getElementById('masterPaletteCount').textContent = `${sys.palette.length} Colors`;
@@ -2477,7 +2742,6 @@
       }, waitMs);
     }
 
-    // Helper to scale a processed frame cleanly with nearest-neighbor + optional CRT scanlines
     function renderFrameForExport(frame, scaleMult, includeCrt) {
       const outW = frame.width * frame.par * scaleMult;
       const outH = frame.height * scaleMult;
@@ -2538,7 +2802,6 @@
           const crt = document.getElementById('selectExportCrt').value === 'crt';
           const sys = HARDWARE_SYSTEMS[state.systemId];
 
-          // Build unified global color table from system palette (plus darkened scanline variants if CRT enabled)
           const colorMap = new Map();
           const globalPalette = [];
           const registerColor = (r, g, b) => {
@@ -2631,11 +2894,12 @@
       const sys = HARDWARE_SYSTEMS[state.systemId];
       const frame = state.processedFrames[state.currentFrameIdx];
       const payload = {
-        generator: '8-Bit Retro Hardware Studio v1.0',
+        generator: '8-Bit Retro Hardware Studio v2.0',
         system: {
           id: sys.id,
           name: sys.name,
-          nativeResolution: [frame.width, frame.height],
+          aspectMode: state.aspectMode,
+          outputResolution: [frame.width, frame.height],
           pixelAspectRatio: frame.par,
           attributeBlockSize: [frame.blockMap.bw, frame.blockMap.bh],
           clashMode: state.clashMode
@@ -2657,7 +2921,7 @@
     }
 
     /*************************************************************************
-     * 12. UTILITIES: CLIPBOARD, TOAST, LOADING, I18N & EVENT LISTENERS
+     * 13. UTILITIES: CLIPBOARD, TOAST, LOADING, I18N & EVENT LISTENERS
      *************************************************************************/
     function copyTextToClipboard(text) {
       if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -2705,6 +2969,14 @@
       zh: {
         appTitle: '8-Bit Retro Hardware Studio',
         appSubtitle: '硬件级分辨率 · 真实主机色盘 · 瓦片属性冲突 (Attribute Clash) · GIF 动图引擎',
+        modeSimple: '✨ 极简模式',
+        modePro: '🛠️ 专业模式',
+        themeSystem: '🌗 主题: 跟随系统',
+        themeDark: '🌙 主题: 黑夜模式',
+        themeLight: '☀️ 主题: 白天模式',
+        devAuto: '📱/🖥️ 自动识别终端',
+        devDesktop: '🖥️ 桌面端工作台 UI',
+        devMobile: '📱 移动端触控 UI',
         demoLabel: '内置演示:',
         demoSynth: '🌅 落日飞车 (GIF动图)',
         demoSlime: '👾 勇者战史莱姆 (GIF动图)',
@@ -2716,11 +2988,16 @@
         dropSub: '支持多帧动画 GIF 自动拆帧与硬件级重编码',
         secHardware: '目标 8-Bit 硬件平台',
         lblSystem: '选择游戏主机 / 视频芯片规格',
-        specRes: '原生分辨率:',
+        lblAspectMode: '生成画幅横纵比 (Aspect Ratio)',
+        lblCustomRatioInput: '输入自定义宽高比 (W : H)',
+        lblCustomPxInput: '自定义横纵分辨率 (16 ~ 1024 px)',
+        lblLockRatio: '锁定原图比例',
+        lblCustomScale: '自定义分辨率倍数 (0.2x ~ 4.5x)',
+        specRes: '实际生成分辨率:',
         specPal: '系统总色盘:',
         specClash: '硬件色块限制:',
         lblClashMode: '硬件属性块限制等级',
-        lblResMode: '目标分辨率比例',
+        lblResMode: '目标分辨率倍数',
         lblFitMode: '画面裁切/适配方式',
         secDither: '抖动算法与色彩匹配',
         lblDitherAlgo: '抖动矩阵 / 误差扩散算法',
@@ -2733,6 +3010,8 @@
         lblBrightness: '亮度 (Brightness)',
         lblContrast: '对比度 (Contrast)',
         lblSaturation: '饱和度 (Saturation)',
+        simpleBannerText: '当前为极简模式，已自动配置最优防闪烁抖动与调色参数。',
+        btnSwitchPro: '展开高级调节',
         viewSingle: '8-Bit 硬件画面',
         viewSide: '双栏对比',
         viewSplit: '滑动对比',
@@ -2761,6 +3040,14 @@
       en: {
         appTitle: '8-Bit Retro Hardware Studio',
         appSubtitle: 'Authentic Resolutions · Real ROM Palettes · Hardware Attribute Clash · GIF Engine',
+        modeSimple: '✨ Simple Mode',
+        modePro: '🛠️ Pro Studio',
+        themeSystem: '🌗 Theme: System',
+        themeDark: '🌙 Theme: Dark',
+        themeLight: '☀️ Theme: Light',
+        devAuto: '📱/🖥️ Auto Device UI',
+        devDesktop: '🖥️ Desktop UI',
+        devMobile: '📱 Mobile Touch UI',
         demoLabel: 'Presets:',
         demoSynth: '🌅 Outrun Sunset (GIF)',
         demoSlime: '👾 RPG Slime Boss (GIF)',
@@ -2772,7 +3059,12 @@
         dropSub: 'Automatic multi-frame GIF extraction & hardware re-encoding',
         secHardware: 'Target 8-Bit Hardware System',
         lblSystem: 'Select Console / Video Chip Architecture',
-        specRes: 'Native Res:',
+        lblAspectMode: 'Output Aspect Ratio & Resolution Mode',
+        lblCustomRatioInput: 'Custom Aspect Ratio (W : H)',
+        lblCustomPxInput: 'Custom Pixel Resolution (16 ~ 1024 px)',
+        lblLockRatio: 'Lock Orig Ratio',
+        lblCustomScale: 'Custom Scale Multiplier (0.2x ~ 4.5x)',
+        specRes: 'Output Res:',
         specPal: 'System Palette:',
         specClash: 'Block Constraint:',
         lblClashMode: 'Attribute Clash Strictness',
@@ -2789,6 +3081,8 @@
         lblBrightness: 'Brightness',
         lblContrast: 'Contrast',
         lblSaturation: 'Saturation',
+        simpleBannerText: 'Simple Mode active with optimal anti-flicker dithering enabled.',
+        btnSwitchPro: 'Show Pro Controls',
         viewSingle: '8-Bit Output',
         viewSide: 'Side-by-Side',
         viewSplit: 'Split Slider',
@@ -2822,6 +3116,7 @@
         const key = el.getAttribute('data-i18n');
         if (dict[key]) el.textContent = dict[key];
       });
+      updateOriginalAspectBadge();
       updateHardwareSpecUI();
       syncTimelineControls();
     }
@@ -2831,9 +3126,9 @@
       ['Synth', 'Slime', 'Cyber', 'Portrait'].forEach(k => {
         const btn = document.getElementById('demoBtn' + k);
         if (k.toLowerCase() === demoKey) {
-          btn.className = 'px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 font-medium transition hover:bg-emerald-500/30';
+          btn.className = 'px-2 py-1 rounded-md bg-emerald-500/20 text-emerald-300 font-medium transition hover:bg-emerald-500/30 whitespace-nowrap';
         } else {
-          btn.className = 'px-2.5 py-1 rounded-md text-slate-300 hover:bg-slate-800 transition';
+          btn.className = 'px-2 py-1 rounded-md text-slate-300 hover:bg-slate-800 transition whitespace-nowrap';
         }
       });
 
@@ -2843,11 +3138,56 @@
       document.getElementById('inputBadgeInfo').textContent =
         state.sourceFrames.length > 1 ? `${state.sourceFrames.length} Frames GIF` : 'Static Image (256×240)';
 
+      updateOriginalAspectBadge();
       runConversionPipeline();
       restartPlaybackLoop();
     }
 
     function initEventListeners() {
+      // UI Complexity Mode (Simple vs Pro)
+      document.getElementById('btnUiModeSimple').addEventListener('click', () => {
+        state.uiComplexity = 'simple';
+        applyDeviceAndComplexityLayout();
+      });
+      document.getElementById('btnUiModePro').addEventListener('click', () => {
+        state.uiComplexity = 'pro';
+        applyDeviceAndComplexityLayout();
+      });
+      document.getElementById('btnExpandProFromBanner').addEventListener('click', () => {
+        state.uiComplexity = 'pro';
+        applyDeviceAndComplexityLayout();
+      });
+
+      // Theme Mode (System / Dark / Light)
+      document.getElementById('selectThemeMode').addEventListener('change', e => {
+        state.themeMode = e.target.value;
+        applyThemeMode();
+      });
+      if (darkMediaQuery && darkMediaQuery.addEventListener) {
+        darkMediaQuery.addEventListener('change', () => {
+          if (state.themeMode === 'system') applyThemeMode();
+        });
+      }
+
+      // Device UI Mode (Auto / Desktop / Mobile)
+      document.getElementById('selectDeviceMode').addEventListener('change', e => {
+        state.deviceMode = e.target.value;
+        applyDeviceAndComplexityLayout();
+      });
+
+      // Mobile Step Tabs
+      document.querySelectorAll('.mob-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.activeMobileTab = btn.getAttribute('data-mobtab');
+          document.querySelectorAll('.mob-tab-btn').forEach(b => {
+            b.className = b === btn
+              ? 'mob-tab-btn py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-semibold text-center'
+              : 'mob-tab-btn py-1.5 rounded-lg text-slate-300 bg-retro-bg text-center';
+          });
+          applyDeviceAndComplexityLayout();
+        });
+      });
+
       // Demo buttons
       document.getElementById('demoBtnSynth').addEventListener('click', () => loadBuiltInDemo('synth'));
       document.getElementById('demoBtnSlime').addEventListener('click', () => loadBuiltInDemo('slime'));
@@ -2875,11 +3215,56 @@
         }
       });
 
-      // Hardware & Dither selects
+      // Hardware System & Aspect Ratio / Resolution Controls
       document.getElementById('selectSystem').addEventListener('change', e => {
         state.systemId = e.target.value;
         runConversionPipeline();
       });
+
+      document.getElementById('selectAspectMode').addEventListener('change', e => {
+        state.aspectMode = e.target.value;
+        if (state.aspectMode === 'original') {
+          state.fitMode = 'contain';
+          document.getElementById('selectFitMode').value = 'contain';
+        } else if (state.aspectMode === 'custom_px' && state.lockCustomPxRatio && state.sourceFrames[0]) {
+          const s0 = state.sourceFrames[0].imageData;
+          state.customPxH = Math.max(16, Math.round(state.customPxW * (s0.height / s0.width)));
+          document.getElementById('inputCustomH').value = state.customPxH;
+        }
+        runConversionPipeline();
+      });
+
+      document.getElementById('inputRatioW').addEventListener('input', e => {
+        state.customRatioW = Math.max(0.1, parseFloat(e.target.value) || 16);
+        runConversionPipeline();
+      });
+      document.getElementById('inputRatioH').addEventListener('input', e => {
+        state.customRatioH = Math.max(0.1, parseFloat(e.target.value) || 9);
+        runConversionPipeline();
+      });
+
+      document.getElementById('chkLockCustomPxRatio').addEventListener('change', e => {
+        state.lockCustomPxRatio = e.target.checked;
+      });
+      document.getElementById('inputCustomW').addEventListener('input', e => {
+        state.customPxW = Math.max(16, Math.min(1024, parseInt(e.target.value, 10) || 256));
+        if (state.lockCustomPxRatio && state.sourceFrames[0]) {
+          const s0 = state.sourceFrames[0].imageData;
+          state.customPxH = Math.max(16, Math.min(1024, Math.round(state.customPxW * (s0.height / s0.width))));
+          document.getElementById('inputCustomH').value = state.customPxH;
+        }
+        runConversionPipeline();
+      });
+      document.getElementById('inputCustomH').addEventListener('input', e => {
+        state.customPxH = Math.max(16, Math.min(1024, parseInt(e.target.value, 10) || 240));
+        if (state.lockCustomPxRatio && state.sourceFrames[0]) {
+          const s0 = state.sourceFrames[0].imageData;
+          state.customPxW = Math.max(16, Math.min(1024, Math.round(state.customPxH * (s0.width / s0.height))));
+          document.getElementById('inputCustomW').value = state.customPxW;
+        }
+        runConversionPipeline();
+      });
+
       document.getElementById('selectClashMode').addEventListener('change', e => {
         state.clashMode = e.target.value;
         const hints = {
@@ -2890,14 +3275,32 @@
         document.getElementById('clashModeHint').textContent = hints[state.clashMode] || '';
         runConversionPipeline();
       });
+
       document.getElementById('selectResScale').addEventListener('change', e => {
-        state.resScale = parseFloat(e.target.value) || 1;
+        const val = e.target.value;
+        const customBox = document.getElementById('customScaleSliderBox');
+        if (val === 'custom') {
+          customBox.classList.remove('hidden');
+          state.resScale = parseFloat(document.getElementById('rangeCustomResScale').value) || 1.25;
+        } else {
+          customBox.classList.add('hidden');
+          state.resScale = parseFloat(val) || 1;
+        }
         runConversionPipeline();
       });
+
+      document.getElementById('rangeCustomResScale').addEventListener('input', e => {
+        state.resScale = parseFloat(e.target.value) || 1;
+        document.getElementById('valCustomResScale').textContent = `${state.resScale.toFixed(2)}x`;
+        runConversionPipeline();
+      });
+
       document.getElementById('selectFitMode').addEventListener('change', e => {
         state.fitMode = e.target.value;
         runConversionPipeline();
       });
+
+      // Dithering & Pre-processing
       document.getElementById('selectDither').addEventListener('change', e => {
         state.ditherAlgo = e.target.value;
         runConversionPipeline();
@@ -2916,7 +3319,6 @@
         runConversionPipeline();
       });
 
-      // Pre-processing sliders
       document.getElementById('rangeBrightness').addEventListener('input', e => {
         state.brightness = parseInt(e.target.value, 10);
         document.getElementById('valBrightness').textContent = (state.brightness > 0 ? '+' : '') + state.brightness;
@@ -2988,16 +3390,26 @@
         else crtDiv.classList.add('hidden');
       });
 
-      // Split Slider & Tile Hover Inspector on Canvas Stack
+      // Split Slider & Tile Hover Inspector on Canvas Stack (Mouse + Touch support)
       const canvasStack = document.getElementById('canvasStack');
       let isDraggingSplit = false;
 
-      const handlePointerOnCanvas = e => {
+      const handlePointerOnCanvas = clientX => {
+        if (state.processedFrames.length === 0) return;
+        const rect = canvasOutput.getBoundingClientRect();
+        const relX = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+        if (isDraggingSplit && state.viewMode === 'split') {
+          state.splitPos = relX;
+          renderCurrentFrameToViewport();
+        }
+      };
+
+      const handleInspectOnCanvas = (clientX, clientY) => {
         if (state.processedFrames.length === 0) return;
         const frame = state.processedFrames[state.currentFrameIdx];
         const rect = canvasOutput.getBoundingClientRect();
-        const relX = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-        const relY = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
+        const relX = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+        const relY = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
 
         if (isDraggingSplit && state.viewMode === 'split') {
           state.splitPos = relX;
@@ -3025,11 +3437,23 @@
       canvasStack.addEventListener('mousedown', e => {
         if (state.viewMode === 'split') {
           isDraggingSplit = true;
-          handlePointerOnCanvas(e);
+          handleInspectOnCanvas(e.clientX, e.clientY);
         }
       });
       window.addEventListener('mouseup', () => { isDraggingSplit = false; });
-      canvasStack.addEventListener('mousemove', handlePointerOnCanvas);
+      canvasStack.addEventListener('mousemove', e => handleInspectOnCanvas(e.clientX, e.clientY));
+      canvasStack.addEventListener('touchstart', e => {
+        if (e.touches && e.touches[0]) {
+          if (state.viewMode === 'split') isDraggingSplit = true;
+          handleInspectOnCanvas(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      }, { passive: true });
+      canvasStack.addEventListener('touchmove', e => {
+        if (e.touches && e.touches[0]) {
+          handlePointerOnCanvas(e.touches[0].clientX);
+        }
+      }, { passive: true });
+      window.addEventListener('touchend', () => { isDraggingSplit = false; });
       canvasStack.addEventListener('mouseleave', () => {
         renderCurrentFrameToViewport(null);
       });
@@ -3072,7 +3496,6 @@
         restartPlaybackLoop();
       });
 
-      // Copy Palette HEX button
       document.getElementById('btnCopyPaletteHex').addEventListener('click', () => {
         const sys = HARDWARE_SYSTEMS[state.systemId];
         const hexList = sys.palette.map(rgbToHex).join(', ');
@@ -3097,13 +3520,32 @@
       });
 
       window.addEventListener('resize', () => {
-        if (state.zoomMode === 'fit') renderCurrentFrameToViewport();
+        if (state.deviceMode === 'auto') {
+          applyDeviceAndComplexityLayout();
+        } else if (state.zoomMode === 'fit') {
+          renderCurrentFrameToViewport();
+        }
       });
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      try {
+        const savedTheme = localStorage.getItem('retro8bit_theme');
+        if (savedTheme && ['system', 'dark', 'light'].includes(savedTheme)) {
+          state.themeMode = savedTheme;
+          document.getElementById('selectThemeMode').value = savedTheme;
+        }
+      } catch (e) {}
+
+      // Default to Simple Mode on mobile screens to reduce initial cognitive load
+      if (detectIsMobileBrowser()) {
+        state.uiComplexity = 'simple';
+      }
+
+      applyThemeMode();
       initEventListeners();
       loadBuiltInDemo('synth');
+      applyDeviceAndComplexityLayout();
     });
   </script>
 </body>
