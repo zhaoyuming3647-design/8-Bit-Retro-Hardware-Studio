@@ -85,12 +85,10 @@
       image-rendering: crisp-edges;
       image-rendering: pixelated;
     }
-    /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: var(--retro-bg); }
     ::-webkit-scrollbar-thumb { background: var(--retro-border); border-radius: 3px; }
 
-    /* Checkerboard background for transparent GIFs/PNGs */
     .checkerboard {
       background-color: var(--checker-a);
       background-image:
@@ -102,7 +100,6 @@
       background-position: 0 0, 0 8px, 8px -8px, -8px 0;
     }
 
-    /* CRT Scanlines Overlay */
     .crt-overlay {
       background: linear-gradient(
         rgba(18, 16, 16, 0) 50%,
@@ -145,7 +142,6 @@
       border: 2px solid #0b0e14;
     }
 
-    /* Mobile UI Specific Layout Enhancements */
     body.mobile-ui input[type="range"] { height: 8px; }
     body.mobile-ui input[type="range"]::-webkit-slider-thumb { width: 22px; height: 22px; }
     body.mobile-ui select, body.mobile-ui button { min-height: 38px; }
@@ -163,14 +159,14 @@
         <div>
           <div class="flex flex-wrap items-center gap-1.5">
             <h1 class="font-bold text-sm sm:text-base tracking-tight text-white" data-i18n="appTitle">8-Bit Retro Hardware Studio</h1>
-            <span class="px-1.5 py-0.5 text-[10px] font-mono font-semibold uppercase rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">v2.0</span>
+            <span class="px-1.5 py-0.5 text-[10px] font-mono font-semibold uppercase rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">v2.5</span>
             <span id="deviceDetectedBadge" class="px-1.5 py-0.5 text-[10px] font-mono rounded bg-cyan-500/15 text-cyan-400 border border-cyan-500/30">🖥️ Desktop UI</span>
           </div>
-          <p class="text-xs text-slate-400 hidden xl:block" data-i18n="appSubtitle">硬件级分辨率 · 真实主机色盘 · 瓦片属性冲突 (Attribute Clash) · GIF 动图引擎</p>
+          <p class="text-xs text-slate-400 hidden xl:block" data-i18n="appSubtitle">硬件级分辨率 · 真实主机色盘 · 瓦片属性冲突 (Attribute Clash) · GIF 动图防卡顿引擎</p>
         </div>
       </div>
 
-      <!-- Top Right Controls: Simple/Pro Mode, Preset Demos, Theme, Device UI, Spec & Lang -->
+      <!-- Top Right Controls -->
       <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
 
         <!-- UI Complexity Switcher: Simple Mode vs Pro Studio Mode -->
@@ -188,14 +184,14 @@
           <button id="demoBtnPortrait" class="px-2 py-1 rounded-md text-slate-300 hover:bg-slate-800 transition whitespace-nowrap" data-i18n="demoPortrait">🎨 色阶测试卡</button>
         </div>
 
-        <!-- Theme Selector: System / Light / Dark -->
+        <!-- Theme Selector -->
         <select id="selectThemeMode" aria-label="Theme Mode" class="bg-retro-card hover:bg-slate-700 border border-retro-border rounded-lg px-2 py-1.5 text-xs font-medium text-slate-200 outline-none cursor-pointer">
           <option value="system" data-i18n="themeSystem">🌗 主题: 跟随系统</option>
           <option value="dark" selected data-i18n="themeDark">🌙 主题: 黑夜模式</option>
           <option value="light" data-i18n="themeLight">☀️ 主题: 白天模式</option>
         </select>
 
-        <!-- Device UI Override Selector: Auto / Desktop / Mobile -->
+        <!-- Device UI Override Selector -->
         <select id="selectDeviceMode" aria-label="Device UI Mode" class="bg-retro-card hover:bg-slate-700 border border-retro-border rounded-lg px-2 py-1.5 text-xs font-medium text-slate-200 outline-none cursor-pointer">
           <option value="auto" selected data-i18n="devAuto">📱/🖥️ 自动识别终端</option>
           <option value="desktop" data-i18n="devDesktop">🖥️ 桌面端工作台 UI</option>
@@ -214,7 +210,7 @@
     </div>
   </header>
 
-  <!-- Mobile UI Quick Step Navigation Bar (Automatically shown when Mobile UI is active) -->
+  <!-- Mobile UI Quick Step Navigation Bar -->
   <nav id="mobileStepNav" class="hidden sticky top-[57px] z-20 bg-retro-panel border-b border-retro-border px-2 py-1.5">
     <div class="grid grid-cols-4 gap-1 text-xs">
       <button data-mobtab="input" class="mob-tab-btn py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-semibold text-center">1. 选图</button>
@@ -229,6 +225,55 @@
 
     <!-- LEFT COLUMN: Hardware Specs, Dithering & Image Controls (4 cols on lg) -->
     <aside id="leftSidebar" class="lg:col-span-4 xl:col-span-3 flex flex-col gap-3.5">
+
+      <!-- NEW: Anti-Lag Render Trigger Mode & Static Reference Frame Card -->
+      <section id="secRenderControlCard" class="bg-retro-panel border border-emerald-500/40 rounded-xl p-3.5 shadow-lg space-y-2.5">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xs font-semibold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+            <span>⚡</span>
+            <span data-i18n="secRenderMode">防卡顿渲染与静帧调参</span>
+          </h2>
+          <span id="renderStateBadge" class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">已同步</span>
+        </div>
+
+        <div>
+          <label for="selectRenderTriggerMode" class="block text-[11px] text-slate-300 mb-1" data-i18n="lblRenderTrigger">参数调节响应模式 (防卡顿核心设置)</label>
+          <select id="selectRenderTriggerMode" class="w-full bg-retro-bg border border-retro-border focus:border-emerald-500 rounded-lg px-2.5 py-1.5 text-xs text-white font-medium outline-none">
+            <option value="single_preview" selected>🎯 静帧实时调参 + 按钮渲染全帧 (推荐 · 丝滑不卡)</option>
+            <option value="manual_button">🖱️ 纯手动按钮渲染 (改完所有参数后按按钮再算)</option>
+            <option value="auto_realtime">🔄 全帧自动重算 (仅建议小尺寸或静态图使用)</option>
+          </select>
+        </div>
+
+        <!-- Reference Frame Picker for single_preview mode when multi-frame GIF is loaded -->
+        <div id="refFrameSelectorBox" class="bg-retro-bg/80 border border-retro-border rounded-lg p-2 space-y-1.5">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="text-slate-300" data-i18n="lblRefFrame">当前调参基准静帧:</span>
+            <span id="lblRefFrameVal" class="font-mono text-emerald-400 font-semibold">第 1 帧 / 共 16 帧</span>
+          </div>
+          <input id="rangeRefFrame" type="range" min="0" max="15" value="0" class="w-full">
+          <p class="text-[10px] text-slate-400 leading-tight" data-i18n="refFrameTip">改参数时仅实时计算该静帧（毫秒级响应）；调满意后点下方按钮合成全部动图帧。</p>
+        </div>
+
+        <!-- Action Buttons: Render Current Frame / Render All Frames -->
+        <div class="flex flex-col gap-1.5 pt-0.5">
+          <button id="btnApplyRenderNow" class="w-full py-2 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/15 transition">
+            <span>🚀</span>
+            <span id="txtBtnApplyRender" data-i18n="btnRenderAllNow">应用参数并渲染全部 GIF 帧</span>
+          </button>
+
+          <!-- Inline Progress Bar (Shown during multi-frame or high-res rendering) -->
+          <div id="inlineProgressBox" class="hidden bg-retro-bg border border-retro-border rounded-lg p-2 space-y-1">
+            <div class="flex items-center justify-between text-[11px] font-mono">
+              <span id="inlineProgressText" class="text-emerald-400">正在渲染帧 4/16...</span>
+              <span id="inlineProgressPct" class="text-white font-bold">25%</span>
+            </div>
+            <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+              <div id="inlineProgressBar" class="h-full bg-emerald-500 transition-all duration-75" style="width: 25%;"></div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <!-- 1. File Upload / Input Card -->
       <section id="secInputCard" class="bg-retro-panel border border-retro-border rounded-xl p-3.5 shadow-lg">
@@ -277,7 +322,7 @@
           </select>
         </div>
 
-        <!-- NEW: Aspect Ratio & Resolution Mode Selector -->
+        <!-- Aspect Ratio & Resolution Mode Selector -->
         <div class="space-y-2 pt-1 border-t border-retro-border/60">
           <div class="flex items-center justify-between">
             <label for="selectAspectMode" class="text-xs text-slate-300 font-medium" data-i18n="lblAspectMode">生成画幅横纵比 (Aspect Ratio)</label>
@@ -302,7 +347,7 @@
             </optgroup>
           </select>
 
-          <!-- Custom Aspect Ratio Inputs (Shown when custom_ratio is selected) -->
+          <!-- Custom Aspect Ratio Inputs -->
           <div id="customRatioInputs" class="hidden bg-retro-bg/80 border border-retro-border rounded-lg p-2.5 space-y-1.5">
             <div class="text-[11px] text-slate-400" data-i18n="lblCustomRatioInput">输入自定义宽高比 (W : H)</div>
             <div class="flex items-center gap-2">
@@ -312,10 +357,10 @@
             </div>
           </div>
 
-          <!-- Custom Exact Pixel Resolution Inputs (Shown when custom_px is selected) -->
+          <!-- Custom Exact Pixel Resolution Inputs -->
           <div id="customPxInputs" class="hidden bg-retro-bg/80 border border-retro-border rounded-lg p-2.5 space-y-2">
             <div class="flex items-center justify-between">
-              <span class="text-[11px] text-slate-400" data-i18n="lblCustomPxInput">自定义横纵分辨率 (16 ~ 1024 px)</span>
+              <span class="text-[11px] text-slate-400" data-i18n="lblCustomPxInput">自定义横纵分辨率 (16 ~ 2560 px)</span>
               <label class="inline-flex items-center gap-1 text-[10px] text-emerald-400 cursor-pointer">
                 <input id="chkLockCustomPxRatio" type="checkbox" checked class="accent-emerald-500">
                 <span data-i18n="lblLockRatio">锁定原图比例</span>
@@ -324,33 +369,54 @@
             <div class="flex items-center gap-2">
               <div class="flex-1">
                 <span class="text-[10px] text-slate-400 block mb-0.5">宽 Width (px)</span>
-                <input id="inputCustomW" type="number" min="16" max="1024" step="1" value="320" class="w-full bg-retro-panel border border-retro-border rounded px-2 py-1 text-xs font-mono text-white">
+                <input id="inputCustomW" type="number" min="16" max="2560" step="1" value="320" class="w-full bg-retro-panel border border-retro-border rounded px-2 py-1 text-xs font-mono text-white">
               </div>
               <span class="font-mono text-slate-400 pt-4">×</span>
               <div class="flex-1">
                 <span class="text-[10px] text-slate-400 block mb-0.5">高 Height (px)</span>
-                <input id="inputCustomH" type="number" min="16" max="1024" step="1" value="180" class="w-full bg-retro-panel border border-retro-border rounded px-2 py-1 text-xs font-mono text-white">
+                <input id="inputCustomH" type="number" min="16" max="2560" step="1" value="180" class="w-full bg-retro-panel border border-retro-border rounded px-2 py-1 text-xs font-mono text-white">
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Resolution Multiplier & Fit Mode -->
-        <div id="resScaleAndFitRow" class="grid grid-cols-2 gap-2 pt-1">
-          <div>
-            <label for="selectResScale" class="block text-[11px] text-slate-400 mb-1" data-i18n="lblResMode">目标分辨率倍数</label>
-            <select id="selectResScale" class="w-full bg-retro-bg border border-retro-border rounded-lg px-2 py-1.5 text-xs text-slate-200 outline-none">
-              <option value="0.25">0.25x 极低像素 (Micro)</option>
-              <option value="0.5">0.5x 超低像素风格</option>
-              <option value="0.75">0.75x 紧凑低分风格</option>
-              <option value="1" selected>1.0x 原生硬件分辨率</option>
-              <option value="1.5">1.5x 高清精细瓦片</option>
-              <option value="2">2.0x 双倍高密像素 (HD)</option>
-              <option value="3">3.0x 三倍超清瓦片</option>
-              <option value="4">4.0x 四倍极限高分</option>
-              <option value="custom">⚡ 自定义倍数滑块...</option>
-            </select>
+        <!-- UPGRADED: Resolution Multiplier (Preset Dropdown + Direct Manual Number Input!) -->
+        <div id="resScaleAndFitRow" class="space-y-2 pt-1">
+          <div class="grid grid-cols-12 gap-2 items-end">
+            <div class="col-span-7">
+              <label for="selectResScale" class="block text-[11px] text-slate-400 mb-1" data-i18n="lblResMode">分辨率倍数 (快捷档位)</label>
+              <select id="selectResScale" class="w-full bg-retro-bg border border-retro-border rounded-lg px-2 py-1.5 text-xs text-slate-200 outline-none">
+                <option value="0.25">0.25x 极低像素 (Micro)</option>
+                <option value="0.5">0.5x 超低像素风格</option>
+                <option value="0.75">0.75x 紧凑低分风格</option>
+                <option value="1" selected>1.0x 原生硬件基准</option>
+                <option value="1.5">1.5x 高清精细瓦片</option>
+                <option value="2">2.0x 双倍高密像素 (HD)</option>
+                <option value="3">3.0x 三倍超清瓦片</option>
+                <option value="4">4.0x 四倍高分瓦片</option>
+                <option value="6">6.0x 六倍超密像素</option>
+                <option value="8">8.0x 八倍巨幅像素</option>
+                <option value="custom">✏️ 手动输入任意倍数...</option>
+              </select>
+            </div>
+            <div class="col-span-5">
+              <label for="inputManualResScale" class="block text-[11px] text-emerald-400 font-medium mb-1" data-i18n="lblManualScaleInput">手动输入倍数 (x)</label>
+              <div class="relative flex items-center">
+                <input id="inputManualResScale" type="number" min="0.1" max="12" step="0.1" value="1.0" class="w-full bg-retro-bg border border-emerald-500/50 focus:border-emerald-400 rounded-lg pl-2.5 pr-6 py-1.5 text-xs font-mono text-white font-semibold outline-none">
+                <span class="absolute right-2 text-xs font-mono text-emerald-400 pointer-events-none">×</span>
+              </div>
+            </div>
           </div>
+
+          <!-- Custom Resolution Scale Slider (Optional fine-tuning companion) -->
+          <div id="customScaleSliderBox" class="hidden bg-retro-bg/80 border border-retro-border rounded-lg p-2.5">
+            <div class="flex justify-between text-xs mb-1">
+              <span class="text-slate-300" data-i18n="lblCustomScale">拖动滑块微调倍数 (0.2x ~ 10.0x)</span>
+              <span id="valCustomResScale" class="font-mono text-emerald-400">1.00x</span>
+            </div>
+            <input id="rangeCustomResScale" type="range" min="0.2" max="10.0" step="0.05" value="1.0" class="w-full">
+          </div>
+
           <div>
             <label for="selectFitMode" class="block text-[11px] text-slate-400 mb-1" data-i18n="lblFitMode">画面裁切/适配方式</label>
             <select id="selectFitMode" class="w-full bg-retro-bg border border-retro-border rounded-lg px-2 py-1.5 text-xs text-slate-200 outline-none">
@@ -361,20 +427,11 @@
           </div>
         </div>
 
-        <!-- Custom Resolution Scale Slider (Shown when selectResScale === 'custom') -->
-        <div id="customScaleSliderBox" class="hidden bg-retro-bg/80 border border-retro-border rounded-lg p-2.5">
-          <div class="flex justify-between text-xs mb-1">
-            <span class="text-slate-300" data-i18n="lblCustomScale">自定义分辨率倍数 (0.2x ~ 4.5x)</span>
-            <span id="valCustomResScale" class="font-mono text-emerald-400">1.25x</span>
-          </div>
-          <input id="rangeCustomResScale" type="range" min="0.2" max="4.5" step="0.05" value="1.25" class="w-full">
-        </div>
-
         <!-- Hardware Specification Summary Pill Box -->
         <div class="bg-retro-bg/90 border border-retro-border rounded-lg p-2.5 text-[11px] space-y-1.5">
           <div class="flex justify-between">
             <span class="text-slate-400" data-i18n="specRes">实际生成分辨率:</span>
-            <span id="specResVal" class="font-mono text-emerald-300 font-medium">256 × 240 (PAR 1:1)</span>
+            <span id="specResVal" class="font-mono text-emerald-300 font-bold">256 × 240 (PAR 1:1)</span>
           </div>
           <div class="flex justify-between">
             <span class="text-slate-400" data-i18n="specPal">系统总色盘:</span>
@@ -489,7 +546,7 @@
         </div>
       </section>
 
-      <!-- Simple Mode Hint Banner (Shown only when Simple Mode is active) -->
+      <!-- Simple Mode Hint Banner -->
       <div id="simpleModeBanner" class="hidden bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-3 text-xs flex items-center justify-between gap-2">
         <span class="text-slate-300" data-i18n="simpleBannerText">当前为极简模式，已自动配置最优防闪烁抖动与调色参数。</span>
         <button id="btnExpandProFromBanner" class="px-2.5 py-1 rounded-lg bg-emerald-500 text-slate-950 font-semibold shrink-0" data-i18n="btnSwitchPro">展开高级调节</button>
@@ -506,16 +563,14 @@
         <!-- Viewport Toolbar -->
         <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-retro-border">
           <div class="flex flex-wrap items-center gap-1.5">
-            <!-- View Mode Tabs -->
             <div class="inline-flex rounded-lg bg-retro-bg p-0.5 border border-retro-border text-xs">
               <button id="viewModeOutput" class="px-2.5 py-1 rounded-md bg-emerald-500 text-slate-950 font-semibold transition" data-i18n="viewSingle">8-Bit 硬件画面</button>
               <button id="viewModeSide" class="px-2.5 py-1 rounded-md text-slate-300 hover:text-white transition" data-i18n="viewSide">双栏对比</button>
               <button id="viewModeSplit" class="px-2.5 py-1 rounded-md text-slate-300 hover:text-white transition" data-i18n="viewSplit">滑动对比</button>
             </div>
 
-            <!-- Zoom Multiplier -->
             <div class="inline-flex items-center rounded-lg bg-retro-bg px-2 py-1 border border-retro-border text-xs gap-1.5">
-              <span class="text-slate-400" data-i18n="lblZoom">缩放:</span>
+              <span class="text-slate-400" data-i18n="lblZoom">视图缩放:</span>
               <button data-zoom="fit" class="zoom-btn px-1.5 py-0.5 rounded bg-slate-700 text-white font-mono">Fit</button>
               <button data-zoom="1" class="zoom-btn px-1.5 py-0.5 rounded text-slate-400 hover:text-white font-mono">1x</button>
               <button data-zoom="2" class="zoom-btn px-1.5 py-0.5 rounded text-slate-400 hover:text-white font-mono">2x</button>
@@ -537,10 +592,19 @@
           </div>
         </div>
 
+        <!-- Pending Full-GIF Render Notice Bar (Shown when user adjusted params on a single preview frame) -->
+        <div id="pendingFramesBanner" class="hidden bg-amber-500/15 border border-amber-500/40 rounded-lg px-3 py-2 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div class="flex items-center gap-2 text-amber-300">
+            <span>⚡</span>
+            <span id="pendingBannerMsg" data-i18n="msgPendingFrames">当前仅实时预览了调参静帧（防卡顿模式），其余动画帧待渲染。</span>
+          </div>
+          <button id="btnRenderAllFromBanner" class="px-3 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition shrink-0" data-i18n="btnRenderAllBanner">立即渲染全部动画帧</button>
+        </div>
+
         <!-- Main Canvas Stage -->
         <div id="canvasStage" class="relative checkerboard rounded-xl border border-retro-border min-h-[280px] sm:min-h-[420px] flex items-center justify-center p-3 overflow-auto select-none">
 
-          <!-- Side-by-Side Original Container (hidden in single view) -->
+          <!-- Side-by-Side Original Container -->
           <div id="origContainer" class="hidden flex-col items-center gap-1.5 mr-4">
             <span class="text-[11px] font-mono uppercase tracking-wider text-slate-400 bg-retro-panel/90 px-2 py-0.5 rounded border border-retro-border" data-i18n="lblOrigPreview">原始输入画面</span>
             <canvas id="canvasOriginal" class="rounded border border-slate-700 shadow-lg max-w-full h-auto"></canvas>
@@ -551,25 +615,31 @@
             <span id="outputTopLabel" class="hidden text-[11px] font-mono uppercase tracking-wider text-emerald-400 bg-retro-panel/90 px-2 py-0.5 rounded border border-emerald-500/30" data-i18n="lblRetroPreview">8-Bit 硬件渲染输出</span>
 
             <div id="canvasStack" class="relative inline-block shadow-2xl rounded overflow-hidden border border-slate-700/80">
-              <!-- Output 8-Bit Canvas -->
               <canvas id="canvasOutput" class="pixelated block"></canvas>
-              <!-- Split Comparison Overlay Canvas -->
               <canvas id="canvasSplitOrig" class="hidden absolute top-0 left-0 pointer-events-none"></canvas>
-              <!-- Split Slider Handle -->
               <div id="splitHandle" class="hidden absolute top-0 bottom-0 w-0.5 bg-emerald-400 shadow-[0_0_8px_#10b981] cursor-ew-resize z-20" style="left: 50%;">
                 <div class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-bold shadow-md">⇄</div>
               </div>
-              <!-- Hardware Attribute Grid & Hover Highlight Canvas -->
               <canvas id="canvasOverlay" class="pixelated absolute top-0 left-0 pointer-events-none"></canvas>
-              <!-- CRT Scanlines Effect Div -->
               <div id="crtOverlayDiv" class="hidden crt-overlay absolute inset-0 pointer-events-none z-10"></div>
             </div>
           </div>
 
-          <!-- Processing Spinner Overlay -->
-          <div id="loadingOverlay" class="hidden absolute inset-0 bg-slate-950/75 backdrop-blur-sm z-30 flex flex-col items-center justify-center gap-2">
-            <div class="w-8 h-8 border-3 border-emerald-400 border-t-transparent rounded-full animate-spin"></div>
-            <p id="loadingText" class="text-xs font-mono text-emerald-300">正在量化 GIF 帧...</p>
+          <!-- UPGRADED: Interactive Progress Bar Overlay with Percentage & Cancel Button -->
+          <div id="loadingOverlay" class="hidden absolute inset-0 bg-slate-950/80 backdrop-blur-sm z-30 flex flex-col items-center justify-center p-6">
+            <div class="bg-retro-panel border border-retro-border rounded-2xl p-5 max-w-sm w-full shadow-2xl space-y-3 text-center">
+              <div class="flex items-center justify-between text-xs font-mono">
+                <span id="loadingText" class="text-emerald-400 font-semibold truncate">正在量化 GIF 帧...</span>
+                <span id="loadingPercent" class="text-white font-bold text-sm">0%</span>
+              </div>
+              <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+                <div id="loadingProgressBarFill" class="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 transition-all duration-100" style="width: 0%;"></div>
+              </div>
+              <div class="flex items-center justify-between pt-1">
+                <span id="loadingSubDetail" class="text-[11px] font-mono text-slate-400">异步非阻塞管线运行中</span>
+                <button id="btnCancelTask" class="px-2.5 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 text-xs font-medium transition">⏹ 取消</button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -577,8 +647,8 @@
         <div class="bg-retro-bg border border-retro-border rounded-lg p-2.5 flex flex-wrap items-center justify-between gap-3 text-xs">
           <div class="flex flex-wrap items-center gap-4">
             <div>
-              <span class="text-slate-400" data-i18n="statOutputRes">输出尺寸:</span>
-              <span id="statResText" class="font-mono text-white ml-1">256 × 240</span>
+              <span class="text-slate-400" data-i18n="statOutputRes">当前生成尺寸:</span>
+              <span id="statResText" class="font-mono text-white font-semibold ml-1">256 × 240</span>
             </div>
             <div>
               <span class="text-slate-400" data-i18n="statUsedColors">当前帧实际用色:</span>
@@ -590,7 +660,6 @@
             </div>
           </div>
 
-          <!-- Hover Tile Inspector Info -->
           <div id="tileInspectorPill" class="flex items-center gap-2 bg-retro-panel px-2.5 py-1 rounded border border-retro-border">
             <span class="text-slate-400 font-mono text-[11px]" id="inspectorCoords">Tile: --</span>
             <div id="inspectorSwatches" class="flex items-center gap-1">
@@ -599,7 +668,7 @@
           </div>
         </div>
 
-        <!-- GIF Animation Timeline Controller (Shown when multi-frame GIF is loaded) -->
+        <!-- GIF Animation Timeline Controller -->
         <div id="gifTimelineBar" class="bg-retro-bg border border-retro-border rounded-lg p-2.5 flex flex-wrap items-center justify-between gap-3">
           <div class="flex items-center gap-1.5">
             <button id="btnPlayPause" class="px-3 py-1 rounded-md bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs flex items-center gap-1 transition">
@@ -645,11 +714,9 @@
               <button id="btnCopyPaletteHex" class="text-[11px] font-mono text-slate-300 hover:text-emerald-400 bg-retro-bg px-2 py-0.5 rounded border border-retro-border transition" data-i18n="btnCopyHex">📋 复制当前色板 HEX</button>
             </div>
 
-            <!-- Sub-Palettes Container (e.g. NES 4 BG Sub-Palettes, C64 Shared + RAM, etc.) -->
             <div id="subPalettesContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3"></div>
           </div>
 
-          <!-- Master System Palette Strip -->
           <div class="border-t border-retro-border pt-2.5">
             <div class="flex items-center justify-between text-[11px] text-slate-400 mb-1.5">
               <span data-i18n="lblMasterPalette">硬件全局系统色盘 (Master Hardware ROM Palette)</span>
@@ -659,31 +726,43 @@
           </div>
         </div>
 
-        <!-- Export & Download Center (5 cols in Pro, 12 cols in Simple) -->
+        <!-- UPGRADED: Export & Download Center (Supports 1:1 Match with Configured Res + Custom Export Scale!) -->
         <div id="secExportCard" class="xl:col-span-5 bg-retro-panel border border-retro-border rounded-xl p-3.5 shadow-lg flex flex-col justify-between gap-3">
           <div class="space-y-2.5">
             <div class="flex items-center justify-between">
               <h3 class="text-xs font-semibold uppercase tracking-wider text-emerald-400" data-i18n="secExport">导出 8-Bit 图像与动画成品</h3>
-              <span class="text-[11px] font-mono text-slate-400">Lossless Pixel Scaling</span>
+              <span id="exportFinalResPreview" class="text-[11px] font-mono font-bold text-emerald-300 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30">最终导出: 256 × 240 px</span>
             </div>
 
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <label for="selectExportScale" class="block text-[11px] text-slate-400 mb-1" data-i18n="lblExportScale">导出整数倍放大 (防社交平台模糊)</label>
-                <select id="selectExportScale" class="w-full bg-retro-bg border border-retro-border rounded-lg px-2.5 py-1.5 text-xs text-white font-mono outline-none">
-                  <option value="1">1x (原生硬件尺寸)</option>
-                  <option value="2">2x (双倍像素锐利放大)</option>
-                  <option value="3" selected>3x (推荐分享尺寸)</option>
-                  <option value="4">4x (超清像素海报级)</option>
+            <div class="grid grid-cols-12 gap-2 items-end">
+              <div class="col-span-7">
+                <label for="selectExportScale" class="block text-[11px] text-slate-400 mb-1" data-i18n="lblExportScale">导出尺寸与放大倍数</label>
+                <select id="selectExportScale" class="w-full bg-retro-bg border border-retro-border rounded-lg px-2 py-1.5 text-xs text-white font-mono outline-none">
+                  <option value="1" selected>🎯 1x (1:1 严格匹配设定分辨率)</option>
+                  <option value="2">2x (在设定分辨率上放大2倍)</option>
+                  <option value="3">3x (在设定分辨率上放大3倍)</option>
+                  <option value="4">4x (在设定分辨率上放大4倍)</option>
+                  <option value="6">6x (6倍超清像素锐利放大)</option>
+                  <option value="8">8x (8倍巨幅海报像素放大)</option>
+                  <option value="10">10x (10倍极限锐利放大)</option>
+                  <option value="custom">✏️ 手动输入导出放大倍数...</option>
                 </select>
               </div>
-              <div>
-                <label for="selectExportCrt" class="block text-[11px] text-slate-400 mb-1" data-i18n="lblExportCrt">扫描线效果导出</label>
-                <select id="selectExportCrt" class="w-full bg-retro-bg border border-retro-border rounded-lg px-2.5 py-1.5 text-xs text-white outline-none">
-                  <option value="clean" selected>纯净像素块 (不带扫描线)</option>
-                  <option value="crt">嵌入 CRT 扫描线质感</option>
-                </select>
+              <div class="col-span-5">
+                <label for="inputCustomExportScale" class="block text-[11px] text-emerald-400 font-medium mb-1" data-i18n="lblCustomExportMult">手动导出倍数</label>
+                <div class="relative flex items-center">
+                  <input id="inputCustomExportScale" type="number" min="1" max="20" step="1" value="1" class="w-full bg-retro-bg border border-emerald-500/50 rounded-lg pl-2.5 pr-6 py-1.5 text-xs font-mono text-white font-semibold outline-none">
+                  <span class="absolute right-2 text-xs font-mono text-emerald-400 pointer-events-none">×</span>
+                </div>
               </div>
+            </div>
+
+            <div>
+              <label for="selectExportCrt" class="block text-[11px] text-slate-400 mb-1" data-i18n="lblExportCrt">扫描线效果导出</label>
+              <select id="selectExportCrt" class="w-full bg-retro-bg border border-retro-border rounded-lg px-2.5 py-1.5 text-xs text-white outline-none">
+                <option value="clean" selected>纯净像素块 (不带扫描线)</option>
+                <option value="crt">嵌入 CRT 扫描线质感 (需导出倍数 ≥ 2x)</option>
+              </select>
             </div>
           </div>
 
@@ -742,8 +821,8 @@
             <p class="text-xs text-slate-400">Multicolor 模式下分辨率为 160×200（2:1 宽像素），每个 <strong>4×8 宽像素块</strong>最多包含 4 种颜色（3 种全屏共享寄存器色 + 1 种块独立 Color RAM 色）。</p>
           </div>
           <div class="bg-retro-bg p-3 rounded-xl border border-retro-border">
-            <div class="font-bold text-rose-400 mb-1">4. GIF 动图时间域防闪烁</div>
-            <p class="text-xs text-slate-400">对 GIF 动图逐帧转换时，如果每帧重新聚类硬件子色板或使用随机误差扩散，会导致背景剧烈闪烁。本工具提供<strong>首帧硬件子色板锁定</strong>与<strong>Bayer 有序矩阵抖动</strong>，保证动图帧间稳定。</p>
+            <div class="font-bold text-rose-400 mb-1">4. 静帧调参 + 异步进度管线</div>
+            <p class="text-xs text-slate-400">针对多帧 GIF 或高倍分辨率大图，支持先锁定单张静帧进行毫秒级丝滑调参，满意后通过异步分片进度条渲染全部帧，彻底消除浏览器卡顿。</p>
           </div>
         </div>
       </div>
@@ -1201,11 +1280,18 @@
      *************************************************************************/
     const state = {
       lang: 'zh',
-      uiComplexity: 'pro',      // 'simple' | 'pro'
-      themeMode: 'dark',        // 'system' | 'dark' | 'light'
-      deviceMode: 'auto',       // 'auto' | 'desktop' | 'mobile'
-      activeMobileTab: 'input', // 'input' | 'hardware' | 'dither' | 'export'
+      uiComplexity: 'pro',                // 'simple' | 'pro'
+      themeMode: 'dark',                  // 'system' | 'dark' | 'light'
+      deviceMode: 'auto',                 // 'auto' | 'desktop' | 'mobile'
+      activeMobileTab: 'input',           // 'input' | 'hardware' | 'dither' | 'export'
       isMobileEffective: false,
+
+      // Anti-lag Render Trigger Mode
+      renderTriggerMode: 'single_preview', // 'single_preview' | 'manual_button' | 'auto_realtime'
+      previewRefFrameIdx: 0,
+      allFramesSynced: true,
+      hasUnrenderedManualChanges: false,
+      activeTaskToken: 0,
 
       sourceFrames: [],
       processedFrames: [],
@@ -1221,14 +1307,15 @@
 
       // Conversion & Aspect Ratio / Resolution parameters
       systemId: 'nes',
-      aspectMode: 'native',     // 'native' | 'original' | '16:9' | '9:16' | '4:3' | '1:1' | '3:4' | '21:9' | 'custom_ratio' | 'custom_px'
+      aspectMode: 'native',               // 'native' | 'original' | '16:9' | '9:16' | '4:3' | '1:1' | '3:4' | '21:9' | 'custom_ratio' | 'custom_px'
       customRatioW: 16,
       customRatioH: 10,
       customPxW: 320,
       customPxH: 180,
       lockCustomPxRatio: true,
       clashMode: 'strict',
-      resScale: 1,
+      resScale: 1.0,
+      exportScaleMult: 1,                 // Default 1x = 1:1 exact match with configured generation resolution!
       fitMode: 'cover',
       ditherAlgo: 'bayer4',
       ditherStrength: 65,
@@ -1257,22 +1344,21 @@
       const srcFrame = state.sourceFrames[0];
       const srcW = srcFrame ? srcFrame.imageData.width : sys.width;
       const srcH = srcFrame ? srcFrame.imageData.height : sys.height;
-      const scale = state.resScale || 1;
+      const scale = Math.max(0.1, Math.min(12, Number(state.resScale) || 1));
 
       if (state.aspectMode === 'custom_px') {
-        const w = Math.max(16, Math.min(1024, Math.round(state.customPxW)));
-        const h = Math.max(16, Math.min(1024, Math.round(state.customPxH)));
+        const w = Math.max(16, Math.min(2560, Math.round(state.customPxW)));
+        const h = Math.max(16, Math.min(2560, Math.round(state.customPxH)));
         return { targetW: w, targetH: h };
       }
 
       if (state.aspectMode === 'native') {
         return {
-          targetW: Math.max(16, Math.min(1024, Math.round(sys.width * scale))),
-          targetH: Math.max(16, Math.min(1024, Math.round(sys.height * scale)))
+          targetW: Math.max(16, Math.min(2560, Math.round(sys.width * scale))),
+          targetH: Math.max(16, Math.min(2560, Math.round(sys.height * scale)))
         };
       }
 
-      // Determine desired visual aspect ratio (W / H)
       let desiredVisualRatio = (sys.width * sys.par) / sys.height;
       if (state.aspectMode === 'original') {
         desiredVisualRatio = srcW / srcH;
@@ -1285,18 +1371,16 @@
         }
       }
 
-      // Preserve the console's native visual pixel budget at 1.0x, then multiply by scale
       const baseVisualArea = (sys.width * sys.par) * sys.height;
       const scaledVisualArea = baseVisualArea * (scale * scale);
       const visualH = Math.sqrt(scaledVisualArea / desiredVisualRatio);
       const visualW = visualH * desiredVisualRatio;
 
-      const targetW = Math.max(16, Math.min(1024, Math.round(visualW / sys.par)));
-      const targetH = Math.max(16, Math.min(1024, Math.round(visualH)));
+      const targetW = Math.max(16, Math.min(2560, Math.round(visualW / sys.par)));
+      const targetH = Math.max(16, Math.min(2560, Math.round(visualH)));
       return { targetW, targetH };
     }
 
-    // Fast color distance function
     function colorDistanceSq(r1, g1, b1, r2, g2, b2, metric) {
       const dr = r1 - r2;
       const dg = g1 - g2;
@@ -1366,8 +1450,13 @@
       const nMaster = masterPal.length;
 
       const freq = new Int32Array(nMaster);
-      const nearestMap = new Uint8Array(width * height);
-      for (let i = 0, p = 0; i < pixels.length; i += 4, p++) {
+      // Sample stride for very large resolutions so config extraction remains fast (<15ms)
+      const totalPx = width * height;
+      const sampleStride = totalPx > 250000 ? 4 : (totalPx > 100000 ? 2 : 1);
+      const nearestMap = new Uint8Array(totalPx);
+
+      for (let p = 0; p < totalPx; p += sampleStride) {
+        const i = p * 4;
         const idx = findNearestInPalette(pixels[i], pixels[i + 1], pixels[i + 2], masterPal, metric);
         nearestMap[p] = idx;
         freq[idx]++;
@@ -1442,65 +1531,66 @@
           });
         }
 
-        for (let iter = 0; iter < 2; iter++) {
-          const buckets = [new Int32Array(nMaster), new Int32Array(nMaster), new Int32Array(nMaster), new Int32Array(nMaster)];
-          for (let by = 0; by < rows; by++) {
-            for (let bx = 0; bx < cols; bx++) {
-              let bestP = 0;
-              let bestErr = Infinity;
-              for (let p = 0; p < 4; p++) {
-                const palColors = subPals[p].colors;
-                let err = 0;
-                for (let y = by * bh; y < Math.min(height, (by + 1) * bh); y += 2) {
-                  for (let x = bx * bw; x < Math.min(width, (bx + 1) * bw); x += 2) {
-                    const off = (y * width + x) * 4;
-                    const idx = findNearestInPalette(pixels[off], pixels[off + 1], pixels[off + 2], palColors, metric);
-                    const c = palColors[idx];
-                    err += colorDistanceSq(pixels[off], pixels[off + 1], pixels[off + 2], c[0], c[1], c[2], metric);
-                  }
-                }
-                if (err < bestErr) {
-                  bestErr = err;
-                  bestP = p;
+        // Fast block sampling refinement
+        const blockStep = (rows * cols > 1200) ? 2 : 1;
+        const buckets = [new Int32Array(nMaster), new Int32Array(nMaster), new Int32Array(nMaster), new Int32Array(nMaster)];
+        for (let by = 0; by < rows; by += blockStep) {
+          for (let bx = 0; bx < cols; bx += blockStep) {
+            let bestP = 0;
+            let bestErr = Infinity;
+            for (let p = 0; p < 4; p++) {
+              const palColors = subPals[p].colors;
+              let err = 0;
+              for (let y = by * bh; y < Math.min(height, (by + 1) * bh); y += 4) {
+                for (let x = bx * bw; x < Math.min(width, (bx + 1) * bw); x += 4) {
+                  const off = (y * width + x) * 4;
+                  const idx = findNearestInPalette(pixels[off], pixels[off + 1], pixels[off + 2], palColors, metric);
+                  const c = palColors[idx];
+                  err += colorDistanceSq(pixels[off], pixels[off + 1], pixels[off + 2], c[0], c[1], c[2], metric);
                 }
               }
-              for (let y = by * bh; y < Math.min(height, (by + 1) * bh); y++) {
-                for (let x = bx * bw; x < Math.min(width, (bx + 1) * bw); x++) {
-                  const mIdx = nearestMap[y * width + x];
-                  if (mIdx !== backdropIdx) buckets[bestP][mIdx]++;
-                }
+              if (err < bestErr) {
+                bestErr = err;
+                bestP = p;
+              }
+            }
+            for (let y = by * bh; y < Math.min(height, (by + 1) * bh); y += 2) {
+              for (let x = bx * bw; x < Math.min(width, (bx + 1) * bw); x += 2) {
+                const off = (y * width + x) * 4;
+                const mIdx = findNearestInPalette(pixels[off], pixels[off + 1], pixels[off + 2], masterPal, metric);
+                if (mIdx !== backdropIdx) buckets[bestP][mIdx]++;
               }
             }
           }
-          for (let p = 0; p < 4; p++) {
-            const bFreq = buckets[p];
-            const picked = [backdropIdx];
-            for (let slot = 0; slot < 3; slot++) {
-              let bestC = -1;
-              let bestScore = -1;
-              for (let c = 0; c < nMaster; c++) {
-                if (picked.includes(c) || bFreq[c] === 0) continue;
-                let minD = 100000;
-                for (const prev of picked) {
-                  const d = colorDistanceSq(
-                    masterPal[c][0], masterPal[c][1], masterPal[c][2],
-                    masterPal[prev][0], masterPal[prev][1], masterPal[prev][2],
-                    metric
-                  );
-                  if (d < minD) minD = d;
-                }
-                const sc = Math.pow(bFreq[c], 0.8) * Math.sqrt(minD + 100);
-                if (sc > bestScore) {
-                  bestScore = sc;
-                  bestC = c;
-                }
+        }
+        for (let p = 0; p < 4; p++) {
+          const bFreq = buckets[p];
+          const picked = [backdropIdx];
+          for (let slot = 0; slot < 3; slot++) {
+            let bestC = -1;
+            let bestScore = -1;
+            for (let c = 0; c < nMaster; c++) {
+              if (picked.includes(c) || bFreq[c] === 0) continue;
+              let minD = 100000;
+              for (const prev of picked) {
+                const d = colorDistanceSq(
+                  masterPal[c][0], masterPal[c][1], masterPal[c][2],
+                  masterPal[prev][0], masterPal[prev][1], masterPal[prev][2],
+                  metric
+                );
+                if (d < minD) minD = d;
               }
-              if (bestC !== -1) picked.push(bestC);
-              else picked.push(subPals[p].indices[slot + 1]);
+              const sc = Math.pow(bFreq[c], 0.8) * Math.sqrt(minD + 100);
+              if (sc > bestScore) {
+                bestScore = sc;
+                bestC = c;
+              }
             }
-            subPals[p].indices = picked;
-            subPals[p].colors = picked.map(i => masterPal[i]);
+            if (bestC !== -1) picked.push(bestC);
+            else picked.push(subPals[p].indices[slot + 1]);
           }
+          subPals[p].indices = picked;
+          subPals[p].colors = picked.map(i => masterPal[i]);
         }
 
         return { mode: 'subpalettes', bw, bh, subPalettes: subPals };
@@ -1601,6 +1691,7 @@
       const cols = Math.ceil(width / bw);
       const rows = Math.ceil(height / bh);
       const grid = new Array(cols * rows);
+      const pxStep = (bw >= 8 && bh >= 8) ? 2 : 1;
 
       for (let by = 0; by < rows; by++) {
         for (let bx = 0; bx < cols; bx++) {
@@ -1615,8 +1706,8 @@
             for (let p = 0; p < hwConfig.subPalettes.length; p++) {
               const pal = hwConfig.subPalettes[p].colors;
               let err = 0;
-              for (let y = y0; y < y1; y++) {
-                for (let x = x0; x < x1; x++) {
+              for (let y = y0; y < y1; y += pxStep) {
+                for (let x = x0; x < x1; x += pxStep) {
                   const off = (y * width + x) * 4;
                   const idx = findNearestInPalette(pixels[off], pixels[off + 1], pixels[off + 2], pal, metric);
                   const c = pal[idx];
@@ -1639,8 +1730,8 @@
             for (let c = 0; c < masterPal.length; c++) {
               const candidatePal = [baseCols[0], baseCols[1], baseCols[2], masterPal[c]];
               let err = 0;
-              for (let y = y0; y < y1; y++) {
-                for (let x = x0; x < x1; x++) {
+              for (let y = y0; y < y1; y += pxStep) {
+                for (let x = x0; x < x1; x += pxStep) {
                   const off = (y * width + x) * 4;
                   const idx = findNearestInPalette(pixels[off], pixels[off + 1], pixels[off + 2], candidatePal, metric);
                   const col = candidatePal[idx];
@@ -1841,7 +1932,7 @@
     }
 
     /*************************************************************************
-     * 7. FULL PIPELINE EXECUTION (Static & Multi-Frame GIF)
+     * 7. NON-BLOCKING ASYNC PIPELINE & SINGLE-FRAME PREVIEW ENGINE
      *************************************************************************/
     const offscreenScaleCanvas = document.createElement('canvas');
     const offscreenScaleCtx = offscreenScaleCanvas.getContext('2d', { willReadFrequently: true });
@@ -1895,96 +1986,272 @@
       return offscreenScaleCtx.getImageData(0, 0, targetW, targetH);
     }
 
-    function runConversionPipeline() {
-      if (state.sourceFrames.length === 0) return;
+    function processSingleFrameSync(srcFrameObj, targetW, targetH, sys, lockedHwConfig = null) {
+      const downsampled = fitAndDownsampleFrame(
+        srcFrameObj.imageData,
+        targetW,
+        targetH,
+        sys.par,
+        state.fitMode
+      );
 
-      const sys = HARDWARE_SYSTEMS[state.systemId];
-      const { targetW, targetH } = computeTargetDimensions(sys);
+      const adjusted = applyColorAdjustments(
+        downsampled.data,
+        state.brightness,
+        state.contrast,
+        state.saturation
+      );
+
+      const hwConfig = lockedHwConfig || buildGlobalHardwareConfig(
+        adjusted,
+        targetW,
+        targetH,
+        sys,
+        state.clashMode,
+        state.colorMetric
+      );
+
+      const blockMap = buildBlockPalettesForFrame(
+        adjusted,
+        targetW,
+        targetH,
+        sys,
+        hwConfig,
+        state.colorMetric
+      );
+
+      const result = quantizeAndDitherFrame(
+        adjusted,
+        targetW,
+        targetH,
+        blockMap,
+        state.ditherAlgo,
+        state.ditherStrength,
+        state.colorMetric
+      );
+
+      return {
+        origDownsampled: downsampled,
+        imageData: result.imageData,
+        width: targetW,
+        height: targetH,
+        par: sys.par,
+        delay: srcFrameObj.delay,
+        hwConfig,
+        blockMap,
+        usedColorsCount: result.usedColorsCount
+      };
+    }
+
+    function getActiveSourceFrames() {
       const step = state.sourceFrames.length > 1 ? state.frameStep : 1;
-
-      const activeSourceFrames = [];
+      const list = [];
       for (let i = 0; i < state.sourceFrames.length; i += step) {
-        activeSourceFrames.push({
+        list.push({
           imageData: state.sourceFrames[i].imageData,
           delay: state.sourceFrames[i].delay * step
         });
       }
+      return list;
+    }
+
+    function updateRenderStatusUI() {
+      const badge = document.getElementById('renderStateBadge');
+      const pendingBanner = document.getElementById('pendingFramesBanner');
+      const btnApply = document.getElementById('btnApplyRenderNow');
+      const txtBtn = document.getElementById('txtBtnApplyRender');
+      const isMulti = state.sourceFrames.length > 1;
+
+      document.getElementById('refFrameSelectorBox').classList.toggle(
+        'hidden',
+        !isMulti || state.renderTriggerMode !== 'single_preview'
+      );
+
+      if (state.hasUnrenderedManualChanges) {
+        badge.textContent = state.lang === 'zh' ? '参数已改 · 待点击渲染' : 'Pending Render';
+        badge.className = 'text-[10px] font-mono px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse';
+        pendingBanner.classList.remove('hidden');
+        document.getElementById('pendingBannerMsg').textContent =
+          state.lang === 'zh' ? '已修改参数（手动渲染模式），请点击按钮执行硬件渲染。' : 'Parameters changed. Click button to render.';
+        txtBtn.textContent = state.lang === 'zh' ? '🚀 立即执行硬件渲染' : '🚀 Render Now';
+        btnApply.className = 'w-full py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/20 transition';
+      } else if (!state.allFramesSynced && isMulti) {
+        badge.textContent = state.lang === 'zh' ? '静帧已预览 · 全帧待同步' : 'Preview Ready · GIF Pending';
+        badge.className = 'text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40';
+        pendingBanner.classList.remove('hidden');
+        document.getElementById('pendingBannerMsg').textContent =
+          state.lang === 'zh' ? '当前已实时预览调参静帧（零卡顿模式），点击右侧按钮可渲染整套 GIF 动画帧。' : 'Single frame previewed. Click to render all GIF frames.';
+        txtBtn.textContent = state.lang === 'zh' ? `⚡ 渲染全部 ${getActiveSourceFrames().length} 帧 GIF 动画` : `⚡ Render All ${getActiveSourceFrames().length} GIF Frames`;
+        btnApply.className = 'w-full py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/20 transition';
+      } else {
+        badge.textContent = state.lang === 'zh' ? '✓ 全部帧已同步' : '✓ All Synced';
+        badge.className = 'text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30';
+        pendingBanner.classList.add('hidden');
+        txtBtn.textContent = isMulti
+          ? (state.lang === 'zh' ? '🚀 重新渲染全部 GIF 帧' : '🚀 Re-render All GIF Frames')
+          : (state.lang === 'zh' ? '🚀 立即执行硬件渲染' : '🚀 Apply & Render Now');
+        btnApply.className = 'w-full py-2 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/15 transition';
+      }
+    }
+
+    // Fast instant render of ONLY the reference preview frame (used during parameter tweaking)
+    function renderSinglePreviewFrameOnly() {
+      if (state.sourceFrames.length === 0) return;
+      state.activeTaskToken++; // Cancel any running background batch
+
+      const sys = HARDWARE_SYSTEMS[state.systemId];
+      const { targetW, targetH } = computeTargetDimensions(sys);
+      const activeList = getActiveSourceFrames();
+      const refIdx = Math.min(activeList.length - 1, Math.max(0, state.previewRefFrameIdx));
+
+      // Pause animation while tweaking single preview frame
+      state.isPlaying = false;
+      if (state.playTimer) {
+        clearTimeout(state.playTimer);
+        state.playTimer = null;
+      }
+
+      const singleProcessed = processSingleFrameSync(activeList[refIdx], targetW, targetH, sys, null);
+
+      if (state.processedFrames.length !== activeList.length) {
+        state.processedFrames = new Array(activeList.length).fill(singleProcessed);
+      } else {
+        state.processedFrames[refIdx] = singleProcessed;
+      }
+
+      state.currentFrameIdx = refIdx;
+      state.allFramesSynced = activeList.length === 1;
+      state.hasUnrenderedManualChanges = false;
+
+      updateHardwareSpecUI();
+      updateRenderStatusUI();
+      renderCurrentFrameToViewport();
+      renderPalettesInspector();
+      syncTimelineControls();
+    }
+
+    // Full non-blocking chunked rendering across all frames with live Progress Bar!
+    async function runFullAsyncConversionPipeline(autoPlayAfter = true) {
+      if (state.sourceFrames.length === 0) return false;
+      const myToken = ++state.activeTaskToken;
+
+      const sys = HARDWARE_SYSTEMS[state.systemId];
+      const { targetW, targetH } = computeTargetDimensions(sys);
+      const activeList = getActiveSourceFrames();
+      const total = activeList.length;
+
+      const showModalProgress = total > 1 || (targetW * targetH > 180000);
+      if (showModalProgress) {
+        updateProgressUI(
+          true,
+          0,
+          state.lang === 'zh' ? `正在渲染 8-Bit 画面 (1/${total})...` : `Rendering Frame 1/${total}...`,
+          `${targetW} × ${targetH} px · ${sys.name}`
+        );
+      }
+
+      // Yield a frame so browser paints the progress bar immediately
+      await new Promise(r => setTimeout(r, 16));
+      if (myToken !== state.activeTaskToken) return false;
 
       const processed = [];
       let lockedHwConfig = null;
 
-      for (let f = 0; f < activeSourceFrames.length; f++) {
-        const downsampled = fitAndDownsampleFrame(
-          activeSourceFrames[f].imageData,
-          targetW,
-          targetH,
-          sys.par,
-          state.fitMode
-        );
-
-        const adjusted = applyColorAdjustments(
-          downsampled.data,
-          state.brightness,
-          state.contrast,
-          state.saturation
-        );
-
-        let hwConfig;
-        if (f === 0 || !state.temporalLock) {
-          hwConfig = buildGlobalHardwareConfig(
-            adjusted,
-            targetW,
-            targetH,
-            sys,
-            state.clashMode,
-            state.colorMetric
-          );
-          if (f === 0) lockedHwConfig = hwConfig;
-        } else {
-          hwConfig = lockedHwConfig;
+      for (let f = 0; f < total; f++) {
+        if (myToken !== state.activeTaskToken) {
+          updateProgressUI(false);
+          return false;
         }
 
-        const blockMap = buildBlockPalettesForFrame(
-          adjusted,
-          targetW,
-          targetH,
-          sys,
-          hwConfig,
-          state.colorMetric
-        );
+        const pct = Math.round(((f) / total) * 100);
+        if (showModalProgress) {
+          updateProgressUI(
+            true,
+            pct,
+            state.lang === 'zh' ? `正在硬件量化第 ${f + 1} / ${total} 帧...` : `Quantizing Frame ${f + 1} / ${total}...`,
+            `${targetW} × ${targetH} px`
+          );
+        }
 
-        const result = quantizeAndDitherFrame(
-          adjusted,
-          targetW,
-          targetH,
-          blockMap,
-          state.ditherAlgo,
-          state.ditherStrength,
-          state.colorMetric
-        );
+        const useLock = (f > 0 && state.temporalLock) ? lockedHwConfig : null;
+        const pf = processSingleFrameSync(activeList[f], targetW, targetH, sys, useLock);
+        if (f === 0) lockedHwConfig = pf.hwConfig;
+        processed.push(pf);
 
-        processed.push({
-          origDownsampled: downsampled,
-          imageData: result.imageData,
-          width: targetW,
-          height: targetH,
-          par: sys.par,
-          delay: activeSourceFrames[f].delay,
-          hwConfig,
-          blockMap,
-          usedColorsCount: result.usedColorsCount
-        });
+        // Yield every frame so UI & progress bar stay 60fps responsive
+        await new Promise(r => setTimeout(r, 8));
       }
 
+      if (myToken !== state.activeTaskToken) {
+        updateProgressUI(false);
+        return false;
+      }
+
+      updateProgressUI(true, 100, state.lang === 'zh' ? '渲染完成！' : 'Render Complete!', `${targetW} × ${targetH} px`);
       state.processedFrames = processed;
       if (state.currentFrameIdx >= processed.length) {
         state.currentFrameIdx = 0;
       }
+      state.allFramesSynced = true;
+      state.hasUnrenderedManualChanges = false;
+      if (autoPlayAfter && processed.length > 1) {
+        state.isPlaying = true;
+      }
 
       updateHardwareSpecUI();
+      updateRenderStatusUI();
       renderCurrentFrameToViewport();
       renderPalettesInspector();
       syncTimelineControls();
+      restartPlaybackLoop();
+
+      setTimeout(() => {
+        if (myToken === state.activeTaskToken) updateProgressUI(false);
+      }, 160);
+      return true;
+    }
+
+    // Smart dispatcher called when user changes any parameter
+    let debounceTimer = null;
+    function onParameterChanged(isSliderDrag = false) {
+      updateHardwareSpecUI();
+
+      // Mode 1: Pure Manual Button mode -> only mark dirty, never lag while changing inputs
+      if (state.renderTriggerMode === 'manual_button') {
+        state.hasUnrenderedManualChanges = true;
+        updateRenderStatusUI();
+        return;
+      }
+
+      // Mode 2: Single Reference Frame Preview mode (or while dragging slider on multi-frame GIF)
+      const isMulti = getActiveSourceFrames().length > 1;
+      if (state.renderTriggerMode === 'single_preview' && isMulti) {
+        if (isSliderDrag) {
+          if (debounceTimer) clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(() => renderSinglePreviewFrameOnly(), 16);
+        } else {
+          renderSinglePreviewFrameOnly();
+        }
+        return;
+      }
+
+      // Mode 3: Auto Realtime (or single static image)
+      const { targetW, targetH } = computeTargetDimensions(HARDWARE_SYSTEMS[state.systemId]);
+      const isHeavy = (targetW * targetH > 200000) || isMulti;
+      if (isSliderDrag && isHeavy) {
+        if (debounceTimer) clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          if (isMulti) renderSinglePreviewFrameOnly();
+          else runFullAsyncConversionPipeline(false);
+        }, 60);
+      } else {
+        runFullAsyncConversionPipeline(true);
+      }
+    }
+
+    // Legacy compatibility alias
+    function runConversionPipeline() {
+      onParameterChanged(false);
     }
 
     /*************************************************************************
@@ -2010,13 +2277,13 @@
         const maxH = state.isMobileEffective ? 300 : 440;
         scale = Math.min(maxW / baseW, maxH / baseH);
         if (scale >= 1.5) scale = Math.floor(scale);
-        scale = Math.max(0.5, Math.min(4, scale));
+        scale = Math.max(0.2, Math.min(4, scale));
       } else {
         scale = Number(state.zoomMode) || 2;
       }
       return {
-        dispW: Math.round(baseW * scale),
-        dispH: Math.round(baseH * scale),
+        dispW: Math.max(32, Math.round(baseW * scale)),
+        dispH: Math.max(32, Math.round(baseH * scale)),
         scale
       };
     }
@@ -2421,9 +2688,22 @@
         state.lang === 'zh' ? `原图 ${w}×${h} (${ratioStr})` : `Orig ${w}×${h} (${ratioStr})`;
     }
 
+    function syncReferenceFrameSlider() {
+      const activeList = getActiveSourceFrames();
+      const total = Math.max(1, activeList.length);
+      state.previewRefFrameIdx = Math.min(total - 1, Math.max(0, state.previewRefFrameIdx));
+      const rangeEl = document.getElementById('rangeRefFrame');
+      rangeEl.max = Math.max(0, total - 1);
+      rangeEl.value = state.previewRefFrameIdx;
+      document.getElementById('lblRefFrameVal').textContent =
+        state.lang === 'zh'
+          ? `第 ${state.previewRefFrameIdx + 1} 帧 / 共 ${total} 帧`
+          : `Frame ${state.previewRefFrameIdx + 1} / ${total}`;
+    }
+
     async function handleFileUpload(file) {
       if (!file) return;
-      showLoading(true, state.lang === 'zh' ? '正在解析图像 / GIF 数据...' : 'Decoding Image / GIF...');
+      updateProgressUI(true, 10, state.lang === 'zh' ? '正在解析图像 / GIF 数据...' : 'Decoding Image / GIF...', file.name);
 
       try {
         const buffer = await file.arrayBuffer();
@@ -2442,7 +2722,7 @@
             framePixels[i] = 15; framePixels[i + 1] = 20; framePixels[i + 2] = 28; framePixels[i + 3] = 255;
           }
 
-          const maxFramesToProcess = Math.min(numFrames, 60);
+          const maxFramesToProcess = Math.min(numFrames, 80);
           for (let f = 0; f < maxFramesToProcess; f++) {
             const info = reader.frameInfo(f);
             const prevCopy = info.disposal === 3 ? new Uint8ClampedArray(framePixels) : null;
@@ -2477,6 +2757,7 @@
 
           state.sourceFrames = decodedFrames;
           state.currentFrameIdx = 0;
+          state.previewRefFrameIdx = 0;
           state.isPlaying = decodedFrames.length > 1;
           document.getElementById('inputBadgeInfo').textContent = `${decodedFrames.length} Frames GIF (${gw}×${gh})`;
         } else {
@@ -2503,19 +2784,19 @@
             delay: 100
           }];
           state.currentFrameIdx = 0;
+          state.previewRefFrameIdx = 0;
           state.isPlaying = false;
           document.getElementById('inputBadgeInfo').textContent = `Static (${c.width}×${c.height})`;
         }
 
         updateOriginalAspectBadge();
-        runConversionPipeline();
-        restartPlaybackLoop();
+        syncReferenceFrameSlider();
+        await runFullAsyncConversionPipeline(true);
         showToast(state.lang === 'zh' ? `已加载: ${file.name}` : `Loaded: ${file.name}`);
       } catch (err) {
         console.error(err);
+        updateProgressUI(false);
         showToast(state.lang === 'zh' ? '图像解析失败，请尝试其他图片或GIF' : 'Failed to decode image');
-      } finally {
-        showLoading(false);
       }
     }
 
@@ -2572,6 +2853,7 @@
       const rightViewportCol = document.getElementById('rightViewportCol');
       const leftSidebar = document.getElementById('leftSidebar');
 
+      const secRenderControlCard = document.getElementById('secRenderControlCard');
       const secInputCard = document.getElementById('secInputCard');
       const secHardwareCard = document.getElementById('secHardwareCard');
       const secDitherCard = document.getElementById('secDitherCard');
@@ -2581,7 +2863,6 @@
       const simpleModeBanner = document.getElementById('simpleModeBanner');
       const proClashContainer = document.getElementById('proClashContainer');
 
-      // Update Simple / Pro button visual state
       const btnSimple = document.getElementById('btnUiModeSimple');
       const btnPro = document.getElementById('btnUiModePro');
       if (state.uiComplexity === 'simple') {
@@ -2593,12 +2874,11 @@
       }
 
       if (state.isMobileEffective) {
-        // Put Canvas Viewport first on Mobile UI so user always sees live output at top
         rightViewportCol.classList.add('-order-1');
         leftSidebar.classList.add('order-1');
         mobileStepNav.classList.remove('hidden');
 
-        // Filter visible cards according to active mobile step tab
+        secRenderControlCard.classList.remove('hidden');
         secInputCard.classList.toggle('hidden', state.activeMobileTab !== 'input');
         secHardwareCard.classList.toggle('hidden', state.activeMobileTab !== 'hardware');
         secDitherCard.classList.toggle('hidden', state.activeMobileTab !== 'dither');
@@ -2611,6 +2891,7 @@
         leftSidebar.classList.remove('order-1');
         mobileStepNav.classList.add('hidden');
 
+        secRenderControlCard.classList.remove('hidden');
         secInputCard.classList.remove('hidden');
         secHardwareCard.classList.remove('hidden');
         secExportCard.classList.remove('hidden');
@@ -2643,20 +2924,37 @@
       return '#' + [c[0], c[1], c[2]].map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase();
     }
 
+    function updateExportFinalResolutionPreview() {
+      const sys = HARDWARE_SYSTEMS[state.systemId];
+      const { targetW, targetH } = computeTargetDimensions(sys);
+      const mult = Math.max(1, Math.min(20, Math.round(Number(state.exportScaleMult) || 1)));
+      const finalW = targetW * sys.par * mult;
+      const finalH = targetH * mult;
+      const previewEl = document.getElementById('exportFinalResPreview');
+      if (previewEl) {
+        previewEl.textContent = state.lang === 'zh'
+          ? `最终导出: ${finalW} × ${finalH} px`
+          : `Export: ${finalW} × ${finalH} px`;
+      }
+    }
+
     function updateHardwareSpecUI() {
       const sys = HARDWARE_SYSTEMS[state.systemId];
       const { targetW, targetH } = computeTargetDimensions(sys);
       document.getElementById('hwYearBadge').textContent = sys.year;
       document.getElementById('specResVal').textContent =
-        sys.par > 1 ? `${targetW} × ${targetH} (PAR ${sys.par}:1 Wide)` : `${targetW} × ${targetH} (PAR 1:1)`;
+        sys.par > 1
+          ? `${targetW} × ${targetH} (Display ${targetW * sys.par}×${targetH})`
+          : `${targetW} × ${targetH} px`;
       document.getElementById('specPalVal').textContent = sys.palDesc;
       document.getElementById('specClashVal').textContent =
         state.lang === 'zh' ? sys.ruleDescZh : sys.ruleDescEn;
 
-      // Toggle visibility of custom ratio / custom px inputs
       document.getElementById('customRatioInputs').classList.toggle('hidden', state.aspectMode !== 'custom_ratio');
       document.getElementById('customPxInputs').classList.toggle('hidden', state.aspectMode !== 'custom_px');
       document.getElementById('resScaleAndFitRow').classList.toggle('hidden', state.aspectMode === 'custom_px');
+
+      updateExportFinalResolutionPreview();
 
       const isOrdered = ['bayer2', 'bayer4', 'bayer8', 'cluster4', 'scanline', 'none'].includes(state.ditherAlgo);
       const badge = document.getElementById('ditherStabilityBadge');
@@ -2743,8 +3041,9 @@
     }
 
     function renderFrameForExport(frame, scaleMult, includeCrt) {
-      const outW = frame.width * frame.par * scaleMult;
-      const outH = frame.height * scaleMult;
+      const mult = Math.max(1, Math.min(20, Math.round(Number(scaleMult) || 1)));
+      const outW = frame.width * frame.par * mult;
+      const outH = frame.height * mult;
       const c = document.createElement('canvas');
       c.width = outW;
       c.height = outH;
@@ -2758,10 +3057,10 @@
       ctx.imageSmoothingEnabled = false;
       ctx.drawImage(tmp, 0, 0, outW, outH);
 
-      if (includeCrt && scaleMult >= 2) {
+      if (includeCrt && mult >= 2) {
         ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
-        for (let y = 0; y < outH; y += scaleMult) {
-          ctx.fillRect(0, y + scaleMult - 1, outW, 1);
+        for (let y = 0; y < outH; y += mult) {
+          ctx.fillRect(0, y + mult - 1, outW, 1);
         }
       }
       return c;
@@ -2778,87 +3077,122 @@
       setTimeout(() => URL.revokeObjectURL(url), 2000);
     }
 
-    function exportCurrentPng() {
-      if (state.processedFrames.length === 0) return;
-      const scale = Number(document.getElementById('selectExportScale').value) || 3;
+    async function exportCurrentPng() {
+      if (state.sourceFrames.length === 0) return;
+      if (state.hasUnrenderedManualChanges) {
+        renderSinglePreviewFrameOnly();
+      }
+      const scale = Math.max(1, Math.min(20, Math.round(Number(state.exportScaleMult) || 1)));
       const crt = document.getElementById('selectExportCrt').value === 'crt';
-      const frame = state.processedFrames[state.currentFrameIdx];
+      const frame = state.processedFrames[state.currentFrameIdx] || state.processedFrames[0];
       const c = renderFrameForExport(frame, scale, crt);
       c.toBlob(blob => {
         if (blob) {
-          triggerDownload(blob, `8bit_${state.systemId}_${frame.width}x${frame.height}_${scale}x.png`);
-          showToast(state.lang === 'zh' ? '已导出 PNG 图像！' : 'PNG Exported!');
+          triggerDownload(blob, `8bit_${state.systemId}_${c.width}x${c.height}.png`);
+          showToast(state.lang === 'zh' ? `已导出 PNG (${c.width}×${c.height} px)！` : `PNG Exported (${c.width}×${c.height})!`);
         }
       }, 'image/png');
     }
 
-    function exportAnimatedGif() {
-      if (state.processedFrames.length === 0) return;
-      showLoading(true, state.lang === 'zh' ? '正在编码 GIF89a 动图...' : 'Encoding GIF89a...');
+    async function exportAnimatedGif() {
+      if (state.sourceFrames.length === 0) return;
 
-      setTimeout(() => {
-        try {
-          const scale = Number(document.getElementById('selectExportScale').value) || 2;
-          const crt = document.getElementById('selectExportCrt').value === 'crt';
-          const sys = HARDWARE_SYSTEMS[state.systemId];
+      // If not all frames are synced (e.g. user was in single_preview or manual_button mode), render all frames first with progress!
+      if (!state.allFramesSynced || state.hasUnrenderedManualChanges) {
+        const ok = await runFullAsyncConversionPipeline(false);
+        if (!ok) return;
+      }
 
-          const colorMap = new Map();
-          const globalPalette = [];
-          const registerColor = (r, g, b) => {
-            const key = (r << 16) | (g << 8) | b;
-            if (!colorMap.has(key) && globalPalette.length < 256) {
-              colorMap.set(key, globalPalette.length);
-              globalPalette.push([r, g, b]);
-            }
-            return colorMap.get(key) ?? 0;
-          };
+      const myToken = ++state.activeTaskToken;
+      const scale = Math.max(1, Math.min(20, Math.round(Number(state.exportScaleMult) || 1)));
+      const crt = document.getElementById('selectExportCrt').value === 'crt';
+      const sys = HARDWARE_SYSTEMS[state.systemId];
+      const total = state.processedFrames.length;
 
-          sys.palette.forEach(c => {
-            registerColor(c[0], c[1], c[2]);
-            if (crt) {
-              registerColor(Math.round(c[0] * 0.72), Math.round(c[1] * 0.72), Math.round(c[2] * 0.72));
-            }
-          });
+      updateProgressUI(
+        true,
+        5,
+        state.lang === 'zh' ? '正在准备 GIF89a 编码器...' : 'Initializing GIF89a Encoder...',
+        `${total} Frames`
+      );
+      await new Promise(r => setTimeout(r, 20));
 
-          const firstExportCanvas = renderFrameForExport(state.processedFrames[0], scale, crt);
-          const outW = firstExportCanvas.width;
-          const outH = firstExportCanvas.height;
-          const encoder = new Gif89Encoder(outW, outH, globalPalette);
+      try {
+        const colorMap = new Map();
+        const globalPalette = [];
+        const registerColor = (r, g, b) => {
+          const key = (r << 16) | (g << 8) | b;
+          if (!colorMap.has(key) && globalPalette.length < 256) {
+            colorMap.set(key, globalPalette.length);
+            globalPalette.push([r, g, b]);
+          }
+          return colorMap.get(key) ?? 0;
+        };
 
-          for (let f = 0; f < state.processedFrames.length; f++) {
-            const pf = state.processedFrames[f];
-            const c = f === 0 ? firstExportCanvas : renderFrameForExport(pf, scale, crt);
-            const rgba = c.getContext('2d').getImageData(0, 0, outW, outH).data;
-            const indexed = new Uint8Array(outW * outH);
+        sys.palette.forEach(c => {
+          registerColor(c[0], c[1], c[2]);
+          if (crt) {
+            registerColor(Math.round(c[0] * 0.72), Math.round(c[1] * 0.72), Math.round(c[2] * 0.72));
+          }
+        });
 
-            for (let i = 0, p = 0; i < rgba.length; i += 4, p++) {
-              const key = (rgba[i] << 16) | (rgba[i + 1] << 8) | rgba[i + 2];
-              let idx = colorMap.get(key);
-              if (idx === undefined) {
-                idx = findNearestInPalette(rgba[i], rgba[i + 1], rgba[i + 2], globalPalette, 'euclidean');
-              }
-              indexed[p] = idx;
-            }
-            const delayMs = Math.max(30, Math.round((pf.delay || 90) / state.gifSpeed));
-            encoder.addFrame(indexed, delayMs);
+        const firstExportCanvas = renderFrameForExport(state.processedFrames[0], scale, crt);
+        const outW = firstExportCanvas.width;
+        const outH = firstExportCanvas.height;
+        const encoder = new Gif89Encoder(outW, outH, globalPalette);
+
+        for (let f = 0; f < total; f++) {
+          if (myToken !== state.activeTaskToken) {
+            updateProgressUI(false);
+            return;
           }
 
-          const gifBytes = encoder.finish();
-          const blob = new Blob([gifBytes], { type: 'image/gif' });
-          triggerDownload(blob, `8bit_${state.systemId}_${outW}x${outH}.gif`);
-          showToast(state.lang === 'zh' ? '已成功导出 8-Bit GIF 动图！' : '8-Bit GIF Exported!');
-        } catch (err) {
-          console.error(err);
-          showToast(state.lang === 'zh' ? 'GIF 导出出错' : 'GIF Export Failed');
-        } finally {
-          showLoading(false);
+          const pct = Math.round(((f + 1) / total) * 100);
+          updateProgressUI(
+            true,
+            pct,
+            state.lang === 'zh' ? `正在编码 GIF 第 ${f + 1} / ${total} 帧...` : `Encoding GIF Frame ${f + 1} / ${total}...`,
+            `${outW} × ${outH} px`
+          );
+
+          const pf = state.processedFrames[f];
+          const c = f === 0 ? firstExportCanvas : renderFrameForExport(pf, scale, crt);
+          const rgba = c.getContext('2d').getImageData(0, 0, outW, outH).data;
+          const indexed = new Uint8Array(outW * outH);
+
+          for (let i = 0, p = 0; i < rgba.length; i += 4, p++) {
+            const key = (rgba[i] << 16) | (rgba[i + 1] << 8) | rgba[i + 2];
+            let idx = colorMap.get(key);
+            if (idx === undefined) {
+              idx = findNearestInPalette(rgba[i], rgba[i + 1], rgba[i + 2], globalPalette, 'euclidean');
+            }
+            indexed[p] = idx;
+          }
+          const delayMs = Math.max(30, Math.round((pf.delay || 90) / state.gifSpeed));
+          encoder.addFrame(indexed, delayMs);
+
+          await new Promise(r => setTimeout(r, 8));
         }
-      }, 40);
+
+        const gifBytes = encoder.finish();
+        const blob = new Blob([gifBytes], { type: 'image/gif' });
+        triggerDownload(blob, `8bit_${state.systemId}_${outW}x${outH}.gif`);
+        showToast(state.lang === 'zh' ? `已成功导出 GIF (${outW}×${outH} px)！` : `GIF Exported (${outW}×${outH})!`);
+      } catch (err) {
+        console.error(err);
+        showToast(state.lang === 'zh' ? 'GIF 导出出错' : 'GIF Export Failed');
+      } finally {
+        updateProgressUI(false);
+      }
     }
 
-    function exportSpriteSheet() {
-      if (state.processedFrames.length === 0) return;
-      const scale = Number(document.getElementById('selectExportScale').value) || 2;
+    async function exportSpriteSheet() {
+      if (state.sourceFrames.length === 0) return;
+      if (!state.allFramesSynced || state.hasUnrenderedManualChanges) {
+        const ok = await runFullAsyncConversionPipeline(false);
+        if (!ok) return;
+      }
+      const scale = Math.max(1, Math.min(20, Math.round(Number(state.exportScaleMult) || 1)));
       const crt = document.getElementById('selectExportCrt').value === 'crt';
       const count = state.processedFrames.length;
       const cols = Math.min(8, count);
@@ -2883,7 +3217,7 @@
 
       sheet.toBlob(blob => {
         if (blob) {
-          triggerDownload(blob, `8bit_${state.systemId}_spritesheet_${cols}x${rows}.png`);
+          triggerDownload(blob, `8bit_${state.systemId}_spritesheet_${sheet.width}x${sheet.height}.png`);
           showToast(state.lang === 'zh' ? '已导出序列帧精灵表 PNG！' : 'Sprite Sheet Exported!');
         }
       }, 'image/png');
@@ -2894,12 +3228,14 @@
       const sys = HARDWARE_SYSTEMS[state.systemId];
       const frame = state.processedFrames[state.currentFrameIdx];
       const payload = {
-        generator: '8-Bit Retro Hardware Studio v2.0',
+        generator: '8-Bit Retro Hardware Studio v2.5',
         system: {
           id: sys.id,
           name: sys.name,
           aspectMode: state.aspectMode,
           outputResolution: [frame.width, frame.height],
+          exportMultiplier: state.exportScaleMult,
+          finalExportResolution: [frame.width * frame.par * state.exportScaleMult, frame.height * state.exportScaleMult],
           pixelAspectRatio: frame.par,
           attributeBlockSize: [frame.blockMap.bw, frame.blockMap.bh],
           clashMode: state.clashMode
@@ -2921,8 +3257,37 @@
     }
 
     /*************************************************************************
-     * 13. UTILITIES: CLIPBOARD, TOAST, LOADING, I18N & EVENT LISTENERS
+     * 13. UTILITIES: PROGRESS BAR, CLIPBOARD, TOAST, I18N & EVENT LISTENERS
      *************************************************************************/
+    function updateProgressUI(visible, percent = 0, titleText = '', subDetail = '') {
+      const modalEl = document.getElementById('loadingOverlay');
+      const inlineBox = document.getElementById('inlineProgressBox');
+      if (!visible) {
+        modalEl.classList.add('hidden');
+        inlineBox.classList.add('hidden');
+        return;
+      }
+      modalEl.classList.remove('hidden');
+      inlineBox.classList.remove('hidden');
+
+      const clamped = Math.max(0, Math.min(100, Math.round(percent)));
+      if (titleText) {
+        document.getElementById('loadingText').textContent = titleText;
+        document.getElementById('inlineProgressText').textContent = titleText;
+      }
+      if (subDetail) {
+        document.getElementById('loadingSubDetail').textContent = subDetail;
+      }
+      document.getElementById('loadingPercent').textContent = `${clamped}%`;
+      document.getElementById('inlineProgressPct').textContent = `${clamped}%`;
+      document.getElementById('loadingProgressBarFill').style.width = `${clamped}%`;
+      document.getElementById('inlineProgressBar').style.width = `${clamped}%`;
+    }
+
+    function showLoading(visible, text = '') {
+      updateProgressUI(visible, visible ? 50 : 0, text);
+    }
+
     function copyTextToClipboard(text) {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(() => {
@@ -2958,17 +3323,10 @@
       }, 2400);
     }
 
-    function showLoading(visible, text = '') {
-      const el = document.getElementById('loadingOverlay');
-      if (text) document.getElementById('loadingText').textContent = text;
-      if (visible) el.classList.remove('hidden');
-      else el.classList.add('hidden');
-    }
-
     const I18N_DICT = {
       zh: {
         appTitle: '8-Bit Retro Hardware Studio',
-        appSubtitle: '硬件级分辨率 · 真实主机色盘 · 瓦片属性冲突 (Attribute Clash) · GIF 动图引擎',
+        appSubtitle: '硬件级分辨率 · 真实主机色盘 · 瓦片属性冲突 (Attribute Clash) · GIF 动图防卡顿引擎',
         modeSimple: '✨ 极简模式',
         modePro: '🛠️ 专业模式',
         themeSystem: '🌗 主题: 跟随系统',
@@ -2983,6 +3341,13 @@
         demoCyber: '🏙️ 霓虹街景 (静态图)',
         demoPortrait: '🎨 色阶测试卡',
         btnSpecInfo: '硬件原理说明',
+        secRenderMode: '防卡顿渲染与静帧调参',
+        lblRenderTrigger: '参数调节响应模式 (防卡顿核心设置)',
+        lblRefFrame: '当前调参基准静帧:',
+        refFrameTip: '改参数时仅实时计算该静帧（毫秒级响应）；调满意后点下方按钮合成全部动图帧。',
+        btnRenderAllNow: '应用参数并渲染全部 GIF 帧',
+        msgPendingFrames: '当前仅实时预览了调参静帧（防卡顿模式），其余动画帧待渲染。',
+        btnRenderAllBanner: '立即渲染全部动画帧',
         secInput: '输入图像 / GIF 动图',
         dropPrompt: '点击或拖拽上传 PNG / JPG / WebP / GIF',
         dropSub: '支持多帧动画 GIF 自动拆帧与硬件级重编码',
@@ -2990,14 +3355,15 @@
         lblSystem: '选择游戏主机 / 视频芯片规格',
         lblAspectMode: '生成画幅横纵比 (Aspect Ratio)',
         lblCustomRatioInput: '输入自定义宽高比 (W : H)',
-        lblCustomPxInput: '自定义横纵分辨率 (16 ~ 1024 px)',
+        lblCustomPxInput: '自定义横纵分辨率 (16 ~ 2560 px)',
         lblLockRatio: '锁定原图比例',
-        lblCustomScale: '自定义分辨率倍数 (0.2x ~ 4.5x)',
+        lblResMode: '分辨率倍数 (快捷档位)',
+        lblManualScaleInput: '手动输入倍数 (x)',
+        lblCustomScale: '拖动滑块微调倍数 (0.2x ~ 10.0x)',
         specRes: '实际生成分辨率:',
         specPal: '系统总色盘:',
         specClash: '硬件色块限制:',
         lblClashMode: '硬件属性块限制等级',
-        lblResMode: '目标分辨率倍数',
         lblFitMode: '画面裁切/适配方式',
         secDither: '抖动算法与色彩匹配',
         lblDitherAlgo: '抖动矩阵 / 误差扩散算法',
@@ -3015,12 +3381,12 @@
         viewSingle: '8-Bit 硬件画面',
         viewSide: '双栏对比',
         viewSplit: '滑动对比',
-        lblZoom: '缩放:',
+        lblZoom: '视图缩放:',
         lblShowGrid: '显示硬件属性网格',
         lblCRT: 'CRT 扫描线滤镜',
         lblOrigPreview: '原始输入画面',
         lblRetroPreview: '8-Bit 硬件渲染输出',
-        statOutputRes: '输出尺寸:',
+        statOutputRes: '当前生成尺寸:',
         statUsedColors: '当前帧实际用色:',
         statBlockRule: '属性块规格:',
         inspectorHint: '鼠标悬停画布查看瓦片属性色板',
@@ -3030,7 +3396,8 @@
         btnCopyHex: '📋 复制当前色板 HEX',
         lblMasterPalette: '硬件全局系统色盘 (Master Hardware ROM Palette)',
         secExport: '导出 8-Bit 图像与动画成品',
-        lblExportScale: '导出整数倍放大 (防社交平台模糊)',
+        lblExportScale: '导出尺寸与放大倍数',
+        lblCustomExportMult: '手动导出倍数',
         lblExportCrt: '扫描线效果导出',
         btnExportGif: '导出 8-Bit GIF 动图',
         btnExportPng: '导出当前帧 PNG',
@@ -3039,7 +3406,7 @@
       },
       en: {
         appTitle: '8-Bit Retro Hardware Studio',
-        appSubtitle: 'Authentic Resolutions · Real ROM Palettes · Hardware Attribute Clash · GIF Engine',
+        appSubtitle: 'Authentic Resolutions · Real ROM Palettes · Hardware Attribute Clash · Anti-Lag GIF Engine',
         modeSimple: '✨ Simple Mode',
         modePro: '🛠️ Pro Studio',
         themeSystem: '🌗 Theme: System',
@@ -3054,6 +3421,13 @@
         demoCyber: '🏙️ Cyber Street (Static)',
         demoPortrait: '🎨 Color Test Card',
         btnSpecInfo: 'Hardware Specs',
+        secRenderMode: 'Anti-Lag Render & Reference Frame',
+        lblRenderTrigger: 'Parameter Render Trigger Mode',
+        lblRefFrame: 'Reference Preview Frame:',
+        refFrameTip: 'Adjusting controls updates only this frame instantly; click below to render all GIF frames.',
+        btnRenderAllNow: 'Apply & Render All GIF Frames',
+        msgPendingFrames: 'Single frame previewed (Anti-Lag Mode). Other GIF frames pending render.',
+        btnRenderAllBanner: 'Render All Frames Now',
         secInput: 'Input Image / Animated GIF',
         dropPrompt: 'Click or Drag & Drop PNG / JPG / WebP / GIF',
         dropSub: 'Automatic multi-frame GIF extraction & hardware re-encoding',
@@ -3061,14 +3435,15 @@
         lblSystem: 'Select Console / Video Chip Architecture',
         lblAspectMode: 'Output Aspect Ratio & Resolution Mode',
         lblCustomRatioInput: 'Custom Aspect Ratio (W : H)',
-        lblCustomPxInput: 'Custom Pixel Resolution (16 ~ 1024 px)',
+        lblCustomPxInput: 'Custom Pixel Resolution (16 ~ 2560 px)',
         lblLockRatio: 'Lock Orig Ratio',
-        lblCustomScale: 'Custom Scale Multiplier (0.2x ~ 4.5x)',
-        specRes: 'Output Res:',
+        lblResMode: 'Resolution Scale Preset',
+        lblManualScaleInput: 'Manual Scale (x)',
+        lblCustomScale: 'Fine-Tune Scale Slider (0.2x ~ 10.0x)',
+        specRes: 'Generated Res:',
         specPal: 'System Palette:',
         specClash: 'Block Constraint:',
         lblClashMode: 'Attribute Clash Strictness',
-        lblResMode: 'Resolution Scale',
         lblFitMode: 'Aspect Fit Mode',
         secDither: 'Dithering & Color Matching',
         lblDitherAlgo: 'Dither Matrix / Error Diffusion',
@@ -3086,12 +3461,12 @@
         viewSingle: '8-Bit Output',
         viewSide: 'Side-by-Side',
         viewSplit: 'Split Slider',
-        lblZoom: 'Zoom:',
+        lblZoom: 'View Zoom:',
         lblShowGrid: 'Tile Attribute Grid',
         lblCRT: 'CRT Scanlines',
         lblOrigPreview: 'Original Input',
         lblRetroPreview: '8-Bit Hardware Output',
-        statOutputRes: 'Resolution:',
+        statOutputRes: 'Generated Res:',
         statUsedColors: 'Active Colors:',
         statBlockRule: 'Attribute Cell:',
         inspectorHint: 'Hover canvas to inspect tile palette',
@@ -3101,7 +3476,8 @@
         btnCopyHex: '📋 Copy Palette HEX',
         lblMasterPalette: 'Master Hardware ROM Palette',
         secExport: 'Export 8-Bit Artwork & GIF',
-        lblExportScale: 'Integer Pixel Scale (Crisp Export)',
+        lblExportScale: 'Export Scale Mode',
+        lblCustomExportMult: 'Export Multiplier',
         lblExportCrt: 'Scanline Filter on Export',
         btnExportGif: 'Export 8-Bit Animated GIF',
         btnExportPng: 'Export Current Frame PNG',
@@ -3117,11 +3493,13 @@
         if (dict[key]) el.textContent = dict[key];
       });
       updateOriginalAspectBadge();
+      syncReferenceFrameSlider();
       updateHardwareSpecUI();
+      updateRenderStatusUI();
       syncTimelineControls();
     }
 
-    function loadBuiltInDemo(demoKey) {
+    async function loadBuiltInDemo(demoKey) {
       state.activeDemo = demoKey;
       ['Synth', 'Slime', 'Cyber', 'Portrait'].forEach(k => {
         const btn = document.getElementById('demoBtn' + k);
@@ -3134,16 +3512,60 @@
 
       state.sourceFrames = generateDemoFrames(demoKey);
       state.currentFrameIdx = 0;
+      state.previewRefFrameIdx = 0;
       state.isPlaying = state.sourceFrames.length > 1;
       document.getElementById('inputBadgeInfo').textContent =
         state.sourceFrames.length > 1 ? `${state.sourceFrames.length} Frames GIF` : 'Static Image (256×240)';
 
       updateOriginalAspectBadge();
-      runConversionPipeline();
-      restartPlaybackLoop();
+      syncReferenceFrameSlider();
+      await runFullAsyncConversionPipeline(true);
+    }
+
+    function syncResScaleInputs(newScaleVal) {
+      const clamped = Math.max(0.1, Math.min(12, Math.round(newScaleVal * 100) / 100));
+      state.resScale = clamped;
+      document.getElementById('inputManualResScale').value = clamped;
+      document.getElementById('rangeCustomResScale').value = Math.min(10, Math.max(0.2, clamped));
+      document.getElementById('valCustomResScale').textContent = `${clamped.toFixed(2)}x`;
+
+      const presetSelect = document.getElementById('selectResScale');
+      const presetValues = ['0.25', '0.5', '0.75', '1', '1.5', '2', '3', '4', '6', '8'];
+      if (presetValues.includes(String(clamped))) {
+        presetSelect.value = String(clamped);
+      } else {
+        presetSelect.value = 'custom';
+        document.getElementById('customScaleSliderBox').classList.remove('hidden');
+      }
     }
 
     function initEventListeners() {
+      // Cancel Task Button on Progress Modal
+      document.getElementById('btnCancelTask').addEventListener('click', () => {
+        state.activeTaskToken++;
+        updateProgressUI(false);
+        showToast(state.lang === 'zh' ? '已取消当前渲染任务' : 'Task Cancelled');
+      });
+
+      // Anti-Lag Render Trigger Mode & Reference Frame Controls
+      document.getElementById('selectRenderTriggerMode').addEventListener('change', e => {
+        state.renderTriggerMode = e.target.value;
+        updateRenderStatusUI();
+      });
+
+      document.getElementById('rangeRefFrame').addEventListener('input', e => {
+        state.previewRefFrameIdx = parseInt(e.target.value, 10) || 0;
+        syncReferenceFrameSlider();
+        renderSinglePreviewFrameOnly();
+      });
+
+      document.getElementById('btnApplyRenderNow').addEventListener('click', () => {
+        runFullAsyncConversionPipeline(true);
+      });
+      document.getElementById('btnRenderAllFromBanner').addEventListener('click', () => {
+        runFullAsyncConversionPipeline(true);
+      });
+
       // UI Complexity Mode (Simple vs Pro)
       document.getElementById('btnUiModeSimple').addEventListener('click', () => {
         state.uiComplexity = 'simple';
@@ -3158,7 +3580,7 @@
         applyDeviceAndComplexityLayout();
       });
 
-      // Theme Mode (System / Dark / Light)
+      // Theme Mode
       document.getElementById('selectThemeMode').addEventListener('change', e => {
         state.themeMode = e.target.value;
         applyThemeMode();
@@ -3169,7 +3591,7 @@
         });
       }
 
-      // Device UI Mode (Auto / Desktop / Mobile)
+      // Device UI Mode
       document.getElementById('selectDeviceMode').addEventListener('change', e => {
         state.deviceMode = e.target.value;
         applyDeviceAndComplexityLayout();
@@ -3218,7 +3640,7 @@
       // Hardware System & Aspect Ratio / Resolution Controls
       document.getElementById('selectSystem').addEventListener('change', e => {
         state.systemId = e.target.value;
-        runConversionPipeline();
+        onParameterChanged(false);
       });
 
       document.getElementById('selectAspectMode').addEventListener('change', e => {
@@ -3231,38 +3653,38 @@
           state.customPxH = Math.max(16, Math.round(state.customPxW * (s0.height / s0.width)));
           document.getElementById('inputCustomH').value = state.customPxH;
         }
-        runConversionPipeline();
+        onParameterChanged(false);
       });
 
       document.getElementById('inputRatioW').addEventListener('input', e => {
         state.customRatioW = Math.max(0.1, parseFloat(e.target.value) || 16);
-        runConversionPipeline();
+        onParameterChanged(true);
       });
       document.getElementById('inputRatioH').addEventListener('input', e => {
         state.customRatioH = Math.max(0.1, parseFloat(e.target.value) || 9);
-        runConversionPipeline();
+        onParameterChanged(true);
       });
 
       document.getElementById('chkLockCustomPxRatio').addEventListener('change', e => {
         state.lockCustomPxRatio = e.target.checked;
       });
       document.getElementById('inputCustomW').addEventListener('input', e => {
-        state.customPxW = Math.max(16, Math.min(1024, parseInt(e.target.value, 10) || 256));
+        state.customPxW = Math.max(16, Math.min(2560, parseInt(e.target.value, 10) || 256));
         if (state.lockCustomPxRatio && state.sourceFrames[0]) {
           const s0 = state.sourceFrames[0].imageData;
-          state.customPxH = Math.max(16, Math.min(1024, Math.round(state.customPxW * (s0.height / s0.width))));
+          state.customPxH = Math.max(16, Math.min(2560, Math.round(state.customPxW * (s0.height / s0.width))));
           document.getElementById('inputCustomH').value = state.customPxH;
         }
-        runConversionPipeline();
+        onParameterChanged(true);
       });
       document.getElementById('inputCustomH').addEventListener('input', e => {
-        state.customPxH = Math.max(16, Math.min(1024, parseInt(e.target.value, 10) || 240));
+        state.customPxH = Math.max(16, Math.min(2560, parseInt(e.target.value, 10) || 240));
         if (state.lockCustomPxRatio && state.sourceFrames[0]) {
           const s0 = state.sourceFrames[0].imageData;
-          state.customPxW = Math.max(16, Math.min(1024, Math.round(state.customPxH * (s0.width / s0.height))));
+          state.customPxW = Math.max(16, Math.min(2560, Math.round(state.customPxH * (s0.width / s0.height))));
           document.getElementById('inputCustomW').value = state.customPxW;
         }
-        runConversionPipeline();
+        onParameterChanged(true);
       });
 
       document.getElementById('selectClashMode').addEventListener('change', e => {
@@ -3273,66 +3695,74 @@
           global_palette: 'Global Palette Only'
         };
         document.getElementById('clashModeHint').textContent = hints[state.clashMode] || '';
-        runConversionPipeline();
+        onParameterChanged(false);
       });
 
+      // Resolution Scale Preset Dropdown, Manual Number Input & Slider
       document.getElementById('selectResScale').addEventListener('change', e => {
         const val = e.target.value;
         const customBox = document.getElementById('customScaleSliderBox');
         if (val === 'custom') {
           customBox.classList.remove('hidden');
-          state.resScale = parseFloat(document.getElementById('rangeCustomResScale').value) || 1.25;
         } else {
           customBox.classList.add('hidden');
-          state.resScale = parseFloat(val) || 1;
+          syncResScaleInputs(parseFloat(val) || 1);
+          onParameterChanged(false);
         }
-        runConversionPipeline();
+      });
+
+      document.getElementById('inputManualResScale').addEventListener('input', e => {
+        const v = parseFloat(e.target.value);
+        if (!isNaN(v) && v >= 0.1) {
+          syncResScaleInputs(v);
+          onParameterChanged(true);
+        }
       });
 
       document.getElementById('rangeCustomResScale').addEventListener('input', e => {
-        state.resScale = parseFloat(e.target.value) || 1;
-        document.getElementById('valCustomResScale').textContent = `${state.resScale.toFixed(2)}x`;
-        runConversionPipeline();
+        const v = parseFloat(e.target.value) || 1;
+        syncResScaleInputs(v);
+        onParameterChanged(true);
       });
 
       document.getElementById('selectFitMode').addEventListener('change', e => {
         state.fitMode = e.target.value;
-        runConversionPipeline();
+        onParameterChanged(false);
       });
 
       // Dithering & Pre-processing
       document.getElementById('selectDither').addEventListener('change', e => {
         state.ditherAlgo = e.target.value;
-        runConversionPipeline();
+        onParameterChanged(false);
       });
       document.getElementById('rangeDitherStrength').addEventListener('input', e => {
         state.ditherStrength = parseInt(e.target.value, 10);
         document.getElementById('valDitherStrength').textContent = `${state.ditherStrength}%`;
-        runConversionPipeline();
+        onParameterChanged(true);
       });
       document.getElementById('selectColorMetric').addEventListener('change', e => {
         state.colorMetric = e.target.value;
-        runConversionPipeline();
+        onParameterChanged(false);
       });
       document.getElementById('chkTemporalLock').addEventListener('change', e => {
         state.temporalLock = e.target.checked;
-        runConversionPipeline();
+        onParameterChanged(false);
       });
 
       document.getElementById('rangeBrightness').addEventListener('input', e => {
         state.brightness = parseInt(e.target.value, 10);
         document.getElementById('valBrightness').textContent = (state.brightness > 0 ? '+' : '') + state.brightness;
-        runConversionPipeline();
+        onParameterChanged(true);
       });
       document.getElementById('rangeContrast').addEventListener('input', e => {
         state.contrast = parseInt(e.target.value, 10);
         document.getElementById('valContrast').textContent = (state.contrast > 0 ? '+' : '') + state.contrast;
-        runConversionPipeline();
+        onParameterChanged(true);
       });
       document.getElementById('rangeSaturation').addEventListener('input', e => {
         state.saturation = parseInt(e.target.value, 10);
         document.getElementById('valSaturation').textContent = (state.saturation > 0 ? '+' : '') + state.saturation + '%';
-        runConversionPipeline();
+        onParameterChanged(true);
       });
       document.getElementById('btnResetAdjust').addEventListener('click', () => {
         state.brightness = 0;
@@ -3344,7 +3774,7 @@
         document.getElementById('valBrightness').textContent = '0';
         document.getElementById('valContrast').textContent = '+10';
         document.getElementById('valSaturation').textContent = '+15%';
-        runConversionPipeline();
+        onParameterChanged(false);
       });
 
       // View mode buttons
@@ -3390,7 +3820,7 @@
         else crtDiv.classList.add('hidden');
       });
 
-      // Split Slider & Tile Hover Inspector on Canvas Stack (Mouse + Touch support)
+      // Split Slider & Tile Hover Inspector on Canvas Stack
       const canvasStack = document.getElementById('canvasStack');
       let isDraggingSplit = false;
 
@@ -3459,8 +3889,12 @@
       });
 
       // GIF Timeline Controls
-      document.getElementById('btnPlayPause').addEventListener('click', () => {
-        if (state.processedFrames.length <= 1) return;
+      document.getElementById('btnPlayPause').addEventListener('click', async () => {
+        if (state.sourceFrames.length <= 1) return;
+        if (!state.allFramesSynced) {
+          await runFullAsyncConversionPipeline(true);
+          return;
+        }
         state.isPlaying = !state.isPlaying;
         syncTimelineControls();
         restartPlaybackLoop();
@@ -3468,6 +3902,8 @@
       document.getElementById('btnPrevFrame').addEventListener('click', () => {
         state.isPlaying = false;
         state.currentFrameIdx = (state.currentFrameIdx - 1 + state.processedFrames.length) % state.processedFrames.length;
+        state.previewRefFrameIdx = state.currentFrameIdx;
+        syncReferenceFrameSlider();
         renderCurrentFrameToViewport();
         renderPalettesInspector();
         syncTimelineControls();
@@ -3475,6 +3911,8 @@
       document.getElementById('btnNextFrame').addEventListener('click', () => {
         state.isPlaying = false;
         state.currentFrameIdx = (state.currentFrameIdx + 1) % state.processedFrames.length;
+        state.previewRefFrameIdx = state.currentFrameIdx;
+        syncReferenceFrameSlider();
         renderCurrentFrameToViewport();
         renderPalettesInspector();
         syncTimelineControls();
@@ -3482,9 +3920,15 @@
       document.getElementById('rangeFrameScrub').addEventListener('input', e => {
         state.isPlaying = false;
         state.currentFrameIdx = parseInt(e.target.value, 10) || 0;
-        renderCurrentFrameToViewport();
-        renderPalettesInspector();
-        syncTimelineControls();
+        state.previewRefFrameIdx = state.currentFrameIdx;
+        syncReferenceFrameSlider();
+        if (!state.allFramesSynced) {
+          renderSinglePreviewFrameOnly();
+        } else {
+          renderCurrentFrameToViewport();
+          renderPalettesInspector();
+          syncTimelineControls();
+        }
       });
       document.getElementById('selectGifSpeed').addEventListener('change', e => {
         state.gifSpeed = parseFloat(e.target.value) || 1;
@@ -3492,8 +3936,28 @@
       });
       document.getElementById('selectFrameStep').addEventListener('change', e => {
         state.frameStep = parseInt(e.target.value, 10) || 1;
-        runConversionPipeline();
-        restartPlaybackLoop();
+        syncReferenceFrameSlider();
+        runFullAsyncConversionPipeline(true);
+      });
+
+      // Export Scale Select & Manual Input Sync
+      document.getElementById('selectExportScale').addEventListener('change', e => {
+        const val = e.target.value;
+        if (val === 'custom') {
+          document.getElementById('inputCustomExportScale').focus();
+        } else {
+          state.exportScaleMult = parseInt(val, 10) || 1;
+          document.getElementById('inputCustomExportScale').value = state.exportScaleMult;
+          updateExportFinalResolutionPreview();
+        }
+      });
+
+      document.getElementById('inputCustomExportScale').addEventListener('input', e => {
+        const v = Math.max(1, Math.min(20, parseInt(e.target.value, 10) || 1));
+        state.exportScaleMult = v;
+        const presetOpts = ['1', '2', '3', '4', '6', '8', '10'];
+        document.getElementById('selectExportScale').value = presetOpts.includes(String(v)) ? String(v) : 'custom';
+        updateExportFinalResolutionPreview();
       });
 
       document.getElementById('btnCopyPaletteHex').addEventListener('click', () => {
@@ -3537,7 +4001,6 @@
         }
       } catch (e) {}
 
-      // Default to Simple Mode on mobile screens to reduce initial cognitive load
       if (detectIsMobileBrowser()) {
         state.uiComplexity = 'simple';
       }
