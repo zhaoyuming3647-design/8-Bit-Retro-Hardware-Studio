@@ -4,13 +4,13 @@
 > 
 > 单文件纯前端架构 · 原生硬件分辨率 · 真实 ROM 色盘 · 瓦片属性冲突 (Attribute Clash) · 防卡顿异步渲染引擎
 
-[Live Demo](https://www.google.com/search?q=https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/)
-[](https://github.com/zhaoyuming3647-design/8-Bit-Retro-Hardware-Studio)
-[](https://github.com/zhaoyuming3647-design/8-Bit-Retro-Hardware-Studio)
-[License: MIT](https://www.google.com/search?q=https://github.com/zhaoyuming3647-design/8-Bit-Retro-Hardware-Studio/blob/main/LICENSE)
+[[https://img.shields.io/badge/Demo-在线即刻体验%20Live%20Demo-10b981?style=for-the-badge&logo=google-chrome&logoColor=white]](https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/)
+[[https://img.shields.io/badge/GitHub-8--Bit--Retro--Hardware--Studio-181717?style=for-the-badge&logo=github]](https://github.com/zhaoyuming3647-design/8-Bit-Retro-Hardware-Studio)
+[[https://img.shields.io/badge/Version-v2.5%20Release-f59e0b?style=for-the-badge]](https://github.com/zhaoyuming3647-design/8-Bit-Retro-Hardware-Studio)
+[[https://img.shields.io/badge/License-MIT-06b6d4?style=for-the-badge]](https://github.com/zhaoyuming3647-design/8-Bit-Retro-Hardware-Studio/blob/main/LICENSE)
 
 🎮 **在线免安装即刻体验 (Live Web App)**:  
-👉 **[https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/](https://www.google.com/search?q=https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/)**
+👉 **[https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/](https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/)**
 
 *(支持全平台浏览器直接运行，手机移动端自动切换触控紧凑视图，支持完全离线使用)*
 
@@ -86,92 +86,9 @@
 
 #### 在线使用
 直接在浏览器打开：  
-👉 **[https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/](https://www.google.com/search?q=https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/)**
+👉 **[https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/](https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/)**
 
 #### 本地运行
 1. 克隆或下载本项目仓库：
    ```bash
-   git clone https://github.com/zhaoyuming3647-design/8-Bit-Retro-Hardware-Studio.git
-   ```
-2. 双击打开 `index.html`（或 `8bit_retro_studio.html`）即可在任何现代浏览器中运行，无需安装 Node.js 或 Python 环境，支持断网离线使用。
-
-#### 部署至自己的 GitHub Pages
-1. 确保仓库根目录下有名为 `index.html` 的文件；
-2. 进入仓库 **Settings** -> **Pages**，在 **Build and deployment** 下将 Branch 设为 `main` 分支的 `/ (root)`，点击 Save；
-3. 数秒后即可获得在线地址。
-
----
-
-## English (README)
-
-### Overview
-
-**8-Bit Retro Hardware Studio** is an open-source, client-side web application engineered to **accurately reproduce authentic 1980s 8-bit gaming console and retro microcomputer graphics constraints**.
-
-🎮 **Live Web Application**:  
-👉 **[https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/](https://www.google.com/search?q=https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/)**
-
-Unlike generic "pixelate filter" tools that merely downsample an image and perform standard 256-color quantization, genuine 8-bit video hardware (operating under tiny 2KB–16KB VRAM limitations) strictly enforced **tile attribute tables and attribute clash rules**:
-- **Nintendo Entertainment System (NES / Famicom)**: The screen is segmented into 16×16 pixel attribute blocks. Only 4 background sub-palettes can be defined simultaneously, and each 16×16 area must choose exactly 1 sub-palette (1 global backdrop color + 3 block colors).
-- **Sinclair ZX Spectrum**: The iconic **8×8 Attribute Clash** — each 8×8 pixel grid can only contain 2 colors (INK and PAPER) from the same brightness bank.
-- **Commodore 64**: Multicolor mode restricts each 4×8 wide-pixel cell to 4 colors (3 globally shared colors + 1 per-block Color RAM color).
-- **Temporal Consistency for Animated GIFs**: Naive frame-by-frame quantization causes massive noise and flicker across frames. This tool integrates **temporal sub-palette locking** and **Bayer ordered dithering** to ensure rock-solid animated retro GIFs.
-
-Built as a **single-file self-contained HTML5 application**, it requires zero build steps, zero backend services, and runs entirely in your browser offline.
-
----
-
-### What's New in v2.5
-
-1. **⚡ Anti-Lag Architecture & Reference Frame Tuning**
-   - **🎯 Reference Preview Frame Mode (Default)**: Tweak parameters on a selected single static frame with sub-millisecond instant feedback; click *Apply & Render* to compute full GIF animations only when satisfied.
-   - **🖱️ Manual Button Render Mode**: For ultra-high resolution images, parameters change without recalculating until the button is clicked.
-   - **Async Chunked Progress Bar**: Multi-frame GIF quantization and GIF89a encoding run in non-blocking async slices with live percentage indicators, frame countdowns, and a cancel button.
-2. **📐 Flexible Aspect Ratio & Resolution Engine**
-   - **Keep Original Ratio**: Automatically preserves the original aspect ratio of uploaded photos or GIFs without distortion or letterboxing.
-   - **Social & Streaming Presets**: 16:9 (Widescreen), 9:16 (Shorts/TikTok), 4:3 (CRT), 1:1 (Square), 3:4 (Portrait), 21:9 (Ultrawide).
-   - **Direct Custom Resolution**: Enter custom aspect ratios (`W : H`) or exact pixel resolutions (`16 ~ 2560 px`).
-   - **Direct Scale Multiplier Input**: Type any multiplier (e.g., `0.3x`, `1.8x`, `5.0x`, `10.0x`) directly in the numeric input box.
-3. **🎯 1:1 Export Resolution Matching**
-   - Select *1x (1:1 Exact Match)* to output the exact configured resolution, or scale up to *10x / 20x* with real-time export resolution readout.
-4. **🌗 Dark / Light / Auto-System Theme**
-   - Seamlessly synchronizes with your OS appearance (`prefers-color-scheme`) in real time.
-5. **📱 Auto Device UI Mode**
-   - Detects mobile vs. desktop viewports automatically; mobile layout fixes canvas to top and provides touch-sized tab controls.
-6. **✨ Simple Mode vs. 🛠️ Pro Studio Mode**
-   - Switch between a clutter-free 3-step workflow for casual users and a full-featured studio for pixel artists and retro coders.
-
----
-
-### Hardware Specification Matrix
-
-| Console / Chipset | Native Res | Pixel Aspect Ratio | System Master Palette | Hardware Attribute Constraint Rule |
-| :--- | :--- | :--- | :--- | :--- |
-| **Nintendo FC / NES** | 256 × 240 | 1 : 1 | 54 Colors (2C02 NTSC) | **16×16 Attribute Block** selects 1 of 4 sub-palettes (1 backdrop + 3 unique colors) |
-| **Game Boy DMG** | 160 × 144 | 1 : 1 | 4 Olive Green Shades | 8×8 Tiles, fixed 2bpp monochrome LCD gamut |
-| **Game Boy Pocket** | 160 × 144 | 1 : 1 | 4 Grayscale Shades | 8×8 Tiles, neutral monochrome LCD |
-| **Game Boy Color** | 160 × 144 | 1 : 1 | 32,768 Colors (RGB555) | 8×8 Tiles, 8 sub-palettes of 4 colors each |
-| **ZX Spectrum** | 256 × 192 | 1 : 1 | 15 Colors (Normal/Bright) | **8×8 Attribute Clash**: Max 2 colors (INK + PAPER) per 8×8 block sharing Bright bit |
-| **Commodore 64 (Multi)** | 160 × 200 | 2 : 1 Wide Pixels | 16 Colors (VIC-II) | **4×8 Wide-Pixel Block**: 3 global shared colors + 1 Color RAM color per block |
-| **Commodore 64 (Hi-Res)** | 320 × 200 | 1 : 1 | 16 Colors (VIC-II) | **8×8 Pixel Block**: Max 2 colors per block selected from the 16 VIC-II colors |
-| **MSX (TMS9918A)** | 256 × 192 | 1 : 1 | 15 Colors | **8×1 Horizontal Strip**: Max 2 colors per 8-pixel byte |
-| **Sega Master System** | 256 × 192 | 1 : 1 | 64 Colors (RGB222) | 8×8 Tiles, 2 sub-palettes of 16 colors |
-| **Apple II (Hi-Res)** | 140 × 192 | 2 : 1 Wide Pixels | 6 Colors (NTSC Artifact) | **7×1 Byte Group**: Cannot mix Green/Violet with Orange/Blue in the same group |
-| **PICO-8** | 128 × 128 | 1 : 1 | 16 Colors | 8×8 Tiles, 16 fixed colors (Max 4 colors per tile in strict mode) |
-
----
-
-### Acknowledgements & Credits / 致谢与声明
-
-- **AI Collaboration & Development**: Specially designed, architected, and developed with **Gemini** (Google DeepMind).
-- **Retro Computing Inspirations**:
-  - Steven Hugg ([8bitworkshop](https://8bitworkshop.com/) / [Dithertron](https://github.com/sehugg/dithertron)) for foundational retro architecture insights.
-  - Dean McNamee ([omggif](https://github.com/deanm/omggif)) for the browser GIF parsing library.
-  - Rilden ([tiledpalettequant](https://github.com/rilden/tiledpalettequant)) for tile quantization research.
-  - Nesdev Wiki and C64-Wiki contributors for detailed hardware attribute table specifications.
-
----
-
-### License
-
-This project is released under the [MIT License](https://www.google.com/search?q=https://github.com/zhaoyuming3647-design/8-Bit-Retro-Hardware-Studio/blob/main/LICENSE).
+   git clone [https://github.com/zhaoyuming3647-design/8-Bit-Retro-Hardware-Studio.git](https://github.com/zhaoyuming3647-design/8-Bit-Retro-Hardware-Studio.git)
