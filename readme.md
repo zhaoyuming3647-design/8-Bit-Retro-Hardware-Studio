@@ -4,11 +4,6 @@
 > 
 > 单文件纯前端架构 · 原生硬件分辨率 · 真实 ROM 色盘 · 瓦片属性冲突 (Attribute Clash) · 防卡顿异步渲染引擎
 
-[[https://img.shields.io/badge/Demo-在线即刻体验%20Live%20Demo-10b981?style=for-the-badge&logo=google-chrome&logoColor=white]](https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/)
-[[https://img.shields.io/badge/GitHub-8--Bit--Retro--Hardware--Studio-181717?style=for-the-badge&logo=github]](https://github.com/zhaoyuming3647-design/8-Bit-Retro-Hardware-Studio)
-[[https://img.shields.io/badge/Version-v2.5%20Release-f59e0b?style=for-the-badge]](https://github.com/zhaoyuming3647-design/8-Bit-Retro-Hardware-Studio)
-[[https://img.shields.io/badge/License-MIT-06b6d4?style=for-the-badge]](https://github.com/zhaoyuming3647-design/8-Bit-Retro-Hardware-Studio/blob/main/LICENSE)
-
 🎮 **在线免安装即刻体验 (Live Web App)**:  
 👉 **[https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/](https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/)**
 
