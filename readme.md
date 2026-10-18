@@ -1,9 +1,18 @@
 # 8-Bit Retro Hardware Studio
 
-&lt;p align=&quot;center&quot;&gt;
-  &lt;strong&gt;真实硬件级像素与 GIF 动图转换器 · Authentic 8-Bit Hardware Image &amp; GIF Converter&lt;/strong&gt;&lt;br&gt;
-  单文件纯前端架构 · 原生硬件分辨率 · 真实 ROM 色盘 · 瓦片属性冲突 (Attribute Clash) · GIF 动图防闪烁引擎
-&lt;/p&gt;
+> **真实硬件级像素与 GIF 动图转换工作室 · Authentic 8-Bit Hardware Image & GIF Converter Studio**
+> 
+> 单文件纯前端架构 · 原生硬件分辨率 · 真实 ROM 色盘 · 瓦片属性冲突 (Attribute Clash) · 防卡顿异步渲染引擎
+
+[Live Demo](https://www.google.com/search?q=https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/)
+[](https://github.com/zhaoyuming3647-design/8-Bit-Retro-Hardware-Studio)
+[](https://github.com/zhaoyuming3647-design/8-Bit-Retro-Hardware-Studio)
+[License: MIT](https://www.google.com/search?q=https://github.com/zhaoyuming3647-design/8-Bit-Retro-Hardware-Studio/blob/main/LICENSE)
+
+🎮 **在线免安装即刻体验 (Live Web App)**:  
+👉 **[https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/](https://www.google.com/search?q=https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/)**
+
+*(支持全平台浏览器直接运行，手机移动端自动切换触控紧凑视图，支持完全离线使用)*
 
 ---
 
@@ -11,62 +20,53 @@
 
 ### 简介
 
-**8-Bit Retro Hardware Studio** 是一款致力于**严格还原 1980 年代真实 8 位游戏主机与微型电脑图形硬件限制**的开源纯前端图像/动图转换工作室。
+**8-Bit Retro Hardware Studio** 是一款致力于**严格还原 1980 年代真实 8 位游戏主机与复古电脑图形芯片限制**的开源纯前端图像与 GIF 动图转换工具。
 
-不同于市面上常见的“低分辨率马赛克+全局 256 色量化”滤镜，8-Bit 时代真实的显存（VRAM 通常仅有 2KB~16KB）受限于极度严苛的**瓦片属性表（Attribute Table / Attribute Clash）**：
-- **任天堂 FC / NES**：全屏被划分为 16×16 像素的属性网格，全图仅能定义 4 组背景子色板，每个 16×16 块必须强制绑定其中 1 组（1 个全屏共享底色 + 3 个块私有色）；
+市面上大多数“像素化滤镜”仅仅是将图像简单打马赛克后做全局颜色量化，而真正 8-Bit 时代的游戏画面受限于极小的显存（VRAM 通常仅有 2KB~16KB），由显示芯片强制施加了不可逾越的**瓦片属性表（Attribute Table / Attribute Clash）**规则：
+- **任天堂 FC / NES**：全屏被划分为 16×16 像素的属性网格，全图仅允许 4 组背景子色板，每个 16×16 区域必须强制选定其中 1 组（1 个全屏共享底色 + 3 个区域私有色）；
 - **ZX Spectrum**：著名的 **8×8 颜色冲突**，每个 8×8 像素方格内严格只能同时显示 2 种颜色（INK 前景色与 PAPER 背景色）；
 - **Commodore 64**：Multicolor 模式下 4×8 宽像素块最多容纳 4 种颜色（3 种全屏共享色 + 1 种 Color RAM 私有色）；
-- **GIF 动图时间域一致性**：传统图像转换在处理动图时，每帧独立计算色盘会导致背景大面积雪花闪烁。本工具创新性地引入了**硬件子色板跨帧锁定**与**有序矩阵抖动（Bayer Matrix Dithering）**，完美解决了动图闪烁难题。
+- **GIF 动图时间域防闪烁**：逐帧独立转换动图会导致背景大面积噪点闪烁。本项目引入了**硬件子色板跨帧锁定**与**Bayer 有序矩阵抖动**，使动图输出细腻且背景稳定。
 
-项目为 **单文件 HTML5 架构**，零后端、零构建依赖，下载后直接双击即可离线运行，或一键部署至 GitHub Pages。
-
----
-
-### 核心特性
-
-1. **10 大经典 8-Bit 硬件平台对标**
-   - **Nintendo FC / NES (Ricoh 2C02)**: 256×240 原生分辨率，标准 54 色 NTSC 硬件色盘，真实 16×16 属性块或 MMC5 8×8 细粒度瓦片量化。
-   - **Game Boy Classic (DMG-01)**: 160×144，经典 4 阶橄榄绿 LCD 液晶显示。
-   - **Game Boy Pocket (MGB-001)**: 160×144，4 阶纯正黑白灰阶。
-   - **Game Boy Color (CGB)**: 160×144，8 组 4 色背景子色板，15-bit RGB555 硬件空间聚类。
-   - **Sinclair ZX Spectrum**: 256×192，15 色（7 色相 × 正常/高亮），精确再现 8×8 属性冲突（Attribute Clash）。
-   - **Commodore 64 (VIC-II)**:
-     - Multicolor 模式：160×200（2:1 宽像素渲染为 320×200），4×8 块限 4 色（3 共享 + 1 块私有）。
-     - Hi-Res 模式：320×200，8×8 块限 2 色。
-   - **MSX / ColecoVision (TMS9918A)**: 256×192，8×1 水平扫描线段限 2 色。
-   - **Sega Master System (Mark III)**: 256×192，64 色 RGB222 色盘，双 16 色硬件子色板。
-   - **Apple II (Hi-Res)**: 140×192（2:1 宽像素），7×1 像素组严格遵循 NTSC 彩色副载波相位群限制。
-   - **PICO-8**: 128×128 正方形经典 16 色 Fantasy Console 规格。
-
-2. **多帧 GIF 动图防闪烁引擎**
-   - 原生支持上传多帧 Animated GIF，内置帧合成管线；
-   - **首帧硬件子色板锁定（Temporal Palette Lock）**：自动保持全屏硬件子色板在动画周期内稳定，根除闪烁；
-   - 动画播放控制条：支持实时播放/暂停、单帧逐帧步进、0.5x~2.0x 播放倍速调节、以及 1x/2x/3x 抽帧模拟复古主机低帧率感。
-
-3. **多样化抖动与色彩距离模型**
-   - **有序矩阵抖动（动图推荐）**：Bayer 2×2（经典 FC 棋盘格）、Bayer 4×4、Bayer 8×8、Cluster 4×4 网点抖动、水平扫描线抖动；
-   - **误差扩散抖动（静态图推荐）**：Floyd-Steinberg、Atkinson（经典 Mac 高反差质感）、Sierra Lite；
-   - **色彩匹配距离**：Redmean 人眼感知加权 RGB、BT.601 明度优先、标准线性欧氏距离。
-
-4. **实时硬件属性检查器与视口对比**
-   - 三种对比视图：单画面、双栏对比、实时左右滑动分割线对比；
-   - 硬件属性网格叠加：高亮显示当前系统 16×16、8×8、4×8 或 8×1 瓦片边界；
-   - 交互式瓦片探测：鼠标悬停任意像素，实时显示该瓦片坐标、ID 及绑定的硬件 HEX 色盘；
-   - 硬件色盘探测器：可视化展开系统 Master ROM 色盘与当前帧激活的各组子色板，支持一键复制 HEX；
-   - CRT 监视器模拟：可选纯净像素输出或叠加扫描线与磷光栅格质感。
-
-5. **多规格无损像素导出**
-   - **8-Bit Animated GIF 导出**：内置纯 JS 编写的二进制 GIF89a LZW 编码器，支持 1x~4x 整数倍锐利放大，防社交媒体压缩模糊；
-   - **PNG 单帧导出**；
-   - **序列帧精灵表（Sprite Sheet）导出**：一键生成游戏引擎（Unity / Godot / Phaser）即开即用的网格精灵图；
-   - **硬件配置 JSON 导出**：导出瓦片分配数据与 HEX 调色板，方便复古游戏开发者直接导进 ROM 开发工具。
+本项目采用 **单文件 HTML5 架构**，零后端、零构建依赖，下载后直接双击即可离线运行，或一键部署至 GitHub Pages。
 
 ---
 
-### 硬件规范对照表
+### v2.5 全新特性升级
 
-| 主机 / 芯片平台 | 原生分辨率 | 像素宽高比 (PAR) | 系统总色盘 | 硬件属性约束规则 (Attribute Clash) |
+1. **⚡ 防卡顿渲染与静帧调参系统（彻底告别掉帧与假死）**
+   - **🎯 静帧实时调参 + 按钮渲染全帧（默认推荐）**：处理长动画 GIF 时，支持通过滑块任选某一张作为“调参基准静帧”；拖动任何滑块或切换参数时，**仅毫秒级实时重算该静帧**（拖拽极度丝滑），调满意后一键渲染全部动画帧；
+   - **🖱️ 纯手动按钮渲染模式**：超高分辨率大图专用，改参数过程中不触发重算，参数调好后点击“立即执行硬件渲染”一次性生成；
+   - **🔄 全帧自动重算模式**：适合小尺寸图片或单张静态图；
+   - **异步非阻塞进度条（Chunked Async Pipeline）**：全帧渲染与 GIF 编码全部放入异步任务队列，每帧主动让出时间片刷新 UI 进度条（含实时百分比与取消按钮），主线程绝不假死。
+
+2. **📐 全维度画幅横纵比与超高倍分辨率引擎**
+   - **保持原图比例**：新增“🖼️ 按照原图横纵比生成 (Keep Original Ratio)”，自动读取并显示原图宽高比（如 3:2、照片长图），以真实 8-Bit 像素密度完美适配，不变形、不裁切；
+   - **主流流媒体与社媒比例**：内置 **16:9**（B站/YouTube横屏）、**9:16**（抖音/TikTok竖屏）、**4:3**（复古CRT电视）、**1:1**（正方形头像/表情包）、**3:4**（小红书图文）、**21:9**（宽幅电影）；
+   - **自由输入比例与像素**：支持自定义输入任意横纵比（`W : H`），或直接指定生成像素分辨率（`16 ~ 2560 px`，支持联动锁定比例）；
+   - **手动输入高倍分辨率倍数**：除了 `0.25x ~ 8.0x` 快捷预设档位，右侧直接提供**常驻数字输入框**，支持键盘键入 `0.1x ~ 12.0x` 任意小数倍率！
+
+3. **🎯 导出分辨率 1:1 严格匹配与自定义高倍放大**
+   - 导出面板支持 **「🎯 1x (1:1 严格匹配设定分辨率)」**，上方设定多少实际像素，导出的 GIF/PNG 就是多少像素；
+   - 支持在设定分辨率基础上再进行 `2x ~ 10x` 整数倍锐利放大，或手动输入任意导出倍数（最高 20x），并附带实时 **「最终导出尺寸像素回显」**。
+
+4. **🌗 白天 / 黑夜模式与跟随系统 (Theme Switcher)**
+   - 支持 **「🌗 跟随系统 (System)」、「🌙 黑夜模式 (Dark)」、「☀️ 白天模式 (Light)」**；
+   - 实时监听系统级 `prefers-color-scheme`，随操作系统深浅色模式自动切换，并持久化本地记忆。
+
+5. **📱 自动识别移动端 UI 与桌面端 UI (Responsive UI Mode)**
+   - 自动检测手机/平板/桌面浏览器；
+   - **移动端优化**：画布自动吸顶固定预览，底部提供 **「1. 选图 → 2. 主机/比例 → 3. 细节调优 → 4. 导出」** 分段 Tab 抽屉，放大触控热区，支持手指触控拖拽分割线对比。
+
+6. **✨ 极简模式 (Simple Mode) 与 🛠️ 专业模式 (Pro Mode)**
+   - **极简模式**：专为快速出图设计，隐藏底层复杂参数，用户只需 **① 选图 → ② 选主机与比例 → ③ 导出** 三步搞定；
+   - **专业模式**：展开全部抖动强度、色彩距离算法、Tile 属性网格微调、精灵表与 JSON 数据导出。
+
+---
+
+### 10 大硬件规范对照表
+
+| 主机 / 芯片平台 | 原生基准分辨率 | 像素宽高比 (PAR) | 系统总色盘 | 硬件属性约束规则 (Attribute Clash) |
 | :--- | :--- | :--- | :--- | :--- |
 | **Nintendo FC / NES** | 256 × 240 | 1 : 1 | 54 色 (2C02 NTSC) | **16×16 像素**属性块从 4 组子色板中选 1 组（1 共享底色 + 3 块私有色） |
 | **Game Boy DMG** | 160 × 144 | 1 : 1 | 4 阶橄榄绿 | 8×8 瓦片，全屏 2bpp 固定灰度 |
@@ -84,14 +84,21 @@
 
 ### 使用与部署方法
 
-#### 本地运行
-1. 克隆或下载本项目仓库；
-2. 直接在任何现代浏览器中双击打开 `8bit_retro_studio.html` 即可使用，无需启动本地 HTTP 服务器，支持完全离线操作。
+#### 在线使用
+直接在浏览器打开：  
+👉 **[https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/](https://www.google.com/search?q=https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/)**
 
-#### 部署至 GitHub Pages
-1. 将 `8bit_retro_studio.html` 重命名为 `index.html` 并推送到仓库根目录；
-2. 进入仓库 **Settings** -> **Pages**，Source 选择 `main` 分支的 `/ (root)` 路径，点击 Save；
-3. 数秒后即可获得专属在线 Web 工具地址。
+#### 本地运行
+1. 克隆或下载本项目仓库：
+   ```bash
+   git clone https://github.com/zhaoyuming3647-design/8-Bit-Retro-Hardware-Studio.git
+   ```
+2. 双击打开 `index.html`（或 `8bit_retro_studio.html`）即可在任何现代浏览器中运行，无需安装 Node.js 或 Python 环境，支持断网离线使用。
+
+#### 部署至自己的 GitHub Pages
+1. 确保仓库根目录下有名为 `index.html` 的文件；
+2. 进入仓库 **Settings** -> **Pages**，在 **Build and deployment** 下将 Branch 设为 `main` 分支的 `/ (root)`，点击 Save；
+3. 数秒后即可获得在线地址。
 
 ---
 
@@ -100,6 +107,9 @@
 ### Overview
 
 **8-Bit Retro Hardware Studio** is an open-source, client-side web application engineered to **accurately reproduce authentic 1980s 8-bit gaming console and retro microcomputer graphics constraints**.
+
+🎮 **Live Web Application**:  
+👉 **[https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/](https://www.google.com/search?q=https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/)**
 
 Unlike generic "pixelate filter" tools that merely downsample an image and perform standard 256-color quantization, genuine 8-bit video hardware (operating under tiny 2KB–16KB VRAM limitations) strictly enforced **tile attribute tables and attribute clash rules**:
 - **Nintendo Entertainment System (NES / Famicom)**: The screen is segmented into 16×16 pixel attribute blocks. Only 4 background sub-palettes can be defined simultaneously, and each 16×16 area must choose exactly 1 sub-palette (1 global backdrop color + 3 block colors).
@@ -111,28 +121,25 @@ Built as a **single-file self-contained HTML5 application**, it requires zero bu
 
 ---
 
-### Key Features
+### What's New in v2.5
 
-1. **10 Authentic 8-Bit Hardware Architectures**
-   - Full support for NES (2C02 NTSC 54-color ROM palette & 16×16 attribute blocks), Game Boy DMG (4-shade olive green), Game Boy Pocket (neutral monochrome), Game Boy Color (RGB555 tile sub-palettes), ZX Spectrum (8×8 ULA clash), C64 Multicolor & Hi-Res, MSX TMS9918A (8×1 line clash), Sega Master System, Apple II (7×1 artifact group clash), and PICO-8.
-2. **Anti-Flicker Animated GIF Engine**
-   - Multi-frame GIF upload, decoding, and playback timeline controller;
-   - First-frame hardware palette lock prevents jarring color switches across animation frames;
-   - Pure-JavaScript GIF89a binary LZW encoder allows exporting high-speed retro GIFs directly in the browser.
-3. **Advanced Dithering & Color Metrics**
-   - Ordered matrices (Bayer 2×2, 4×4, 8×8, Cluster Dot, Scanline) with adjustable spread strength;
-   - Error diffusion (Floyd-Steinberg, Atkinson, Sierra Lite) with per-block palette boundary clamping;
-   - Color metrics: Perceptual Redmean, BT.601 Luma priority, and Linear sRGB Euclidean.
-4. **Interactive Hardware Inspector**
-   - Side-by-side and interactive split slider comparisons;
-   - Overlay attribute grids matching native hardware dimensions (16×16, 8×8, 4×8, 8×1);
-   - Live tile hover inspector displaying block coordinates, sub-palette assignment, and active hex colors;
-   - CRT scanline & phosphor simulation toggle.
-5. **Lossless Integer Export Options**
-   - Export crisp, unblurred 1x–4x scaled **Animated GIFs**;
-   - Export current frame as **PNG**;
-   - Export animation sequences as **Sprite Sheet PNGs** ready for game engines (Unity, Godot, Phaser);
-   - Export **Hardware Specification JSON** containing color maps and tile structures.
+1. **⚡ Anti-Lag Architecture & Reference Frame Tuning**
+   - **🎯 Reference Preview Frame Mode (Default)**: Tweak parameters on a selected single static frame with sub-millisecond instant feedback; click *Apply & Render* to compute full GIF animations only when satisfied.
+   - **🖱️ Manual Button Render Mode**: For ultra-high resolution images, parameters change without recalculating until the button is clicked.
+   - **Async Chunked Progress Bar**: Multi-frame GIF quantization and GIF89a encoding run in non-blocking async slices with live percentage indicators, frame countdowns, and a cancel button.
+2. **📐 Flexible Aspect Ratio & Resolution Engine**
+   - **Keep Original Ratio**: Automatically preserves the original aspect ratio of uploaded photos or GIFs without distortion or letterboxing.
+   - **Social & Streaming Presets**: 16:9 (Widescreen), 9:16 (Shorts/TikTok), 4:3 (CRT), 1:1 (Square), 3:4 (Portrait), 21:9 (Ultrawide).
+   - **Direct Custom Resolution**: Enter custom aspect ratios (`W : H`) or exact pixel resolutions (`16 ~ 2560 px`).
+   - **Direct Scale Multiplier Input**: Type any multiplier (e.g., `0.3x`, `1.8x`, `5.0x`, `10.0x`) directly in the numeric input box.
+3. **🎯 1:1 Export Resolution Matching**
+   - Select *1x (1:1 Exact Match)* to output the exact configured resolution, or scale up to *10x / 20x* with real-time export resolution readout.
+4. **🌗 Dark / Light / Auto-System Theme**
+   - Seamlessly synchronizes with your OS appearance (`prefers-color-scheme`) in real time.
+5. **📱 Auto Device UI Mode**
+   - Detects mobile vs. desktop viewports automatically; mobile layout fixes canvas to top and provides touch-sized tab controls.
+6. **✨ Simple Mode vs. 🛠️ Pro Studio Mode**
+   - Switch between a clutter-free 3-step workflow for casual users and a full-featured studio for pixel artists and retro coders.
 
 ---
 
@@ -167,4 +174,4 @@ Built as a **single-file self-contained HTML5 application**, it requires zero bu
 
 ### License
 
-This project is released under the [MIT License](https://www.google.com/search?q=LICENSE).
+This project is released under the [MIT License](https://www.google.com/search?q=https://github.com/zhaoyuming3647-design/8-Bit-Retro-Hardware-Studio/blob/main/LICENSE).
