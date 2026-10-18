@@ -1,9 +1,17 @@
 # 8-Bit Retro Hardware Studio
 
-&lt;p align=&quot;center&quot;&gt;
-  &lt;strong&gt;真实硬件级像素与 GIF 动图转换器 · Authentic 8-Bit Hardware Image &amp; GIF Converter&lt;/strong&gt;&lt;br&gt;
-  单文件纯前端架构 · 原生硬件分辨率 · 真实 ROM 色盘 · 瓦片属性冲突 (Attribute Clash) · GIF 动图防闪烁引擎
-&lt;/p&gt;
+> **真实硬件级像素与 GIF 动图转换器 · Authentic 8-Bit Hardware Image & GIF Converter**
+> 
+> 单文件纯前端架构 · 原生硬件分辨率 · 真实 ROM 色盘 · 瓦片属性冲突 (Attribute Clash) · GIF 动图防闪烁引擎
+
+[Live Demo](https://www.google.com/search?q=https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/)
+[GitHub Repo](https://www.google.com/search?q=https://github.com/zhaoyuming3647-design/8-Bit-Retro-Hardware-Studio)
+[License: MIT](https://www.google.com/search?q=LICENSE)
+
+🎮 **在线免安装即刻体验 (Live Web App)**:  
+👉 **[https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/](https://www.google.com/search?q=https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/)**
+
+*(如果你的仓库内主页面文件名仍为 `8bit_retro_studio.html`，可直接访问：[在线备用链接](https://www.google.com/search?q=https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/8bit_retro_studio.html)；或建议将文件在仓库中重命名为 `index.html`)*
 
 ---
 
@@ -84,14 +92,18 @@
 
 ### 使用与部署方法
 
+#### 在线使用 (GitHub Pages)
+直接访问项目在线地址：
+👉 **[https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/](https://www.google.com/search?q=https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/)**
+
+> **提示**：若打开显示 404，请确认仓库设置：
+> 1. 进入仓库 **Settings** -> 左侧 **Pages**；
+> 2. **Build and deployment** 下的 **Branch** 选择 `main` 分支，目录选择 `/ (root)`，点击 **Save**；
+> 3. 确保仓库根目录下的入口 HTML 文件名为 `index.html`（如果当前上传的文件名为 `8bit_retro_studio.html`，可以在 GitHub 仓库页面将其重命名为 `index.html`，或者访问 `.../8bit_retro_studio.html`）。
+
 #### 本地运行
 1. 克隆或下载本项目仓库；
-2. 直接在任何现代浏览器中双击打开 `8bit_retro_studio.html` 即可使用，无需启动本地 HTTP 服务器，支持完全离线操作。
-
-#### 部署至 GitHub Pages
-1. 将 `8bit_retro_studio.html` 重命名为 `index.html` 并推送到仓库根目录；
-2. 进入仓库 **Settings** -> **Pages**，Source 选择 `main` 分支的 `/ (root)` 路径，点击 Save；
-3. 数秒后即可获得专属在线 Web 工具地址。
+2. 直接在任何现代浏览器中双击打开 `index.html`（或 `8bit_retro_studio.html`）即可使用，支持完全离线操作。
 
 ---
 
@@ -100,6 +112,9 @@
 ### Overview
 
 **8-Bit Retro Hardware Studio** is an open-source, client-side web application engineered to **accurately reproduce authentic 1980s 8-bit gaming console and retro microcomputer graphics constraints**.
+
+🎮 **Live Web Application**:  
+👉 **[https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/](https://www.google.com/search?q=https://zhaoyuming3647-design.github.io/8-Bit-Retro-Hardware-Studio/)**
 
 Unlike generic "pixelate filter" tools that merely downsample an image and perform standard 256-color quantization, genuine 8-bit video hardware (operating under tiny 2KB–16KB VRAM limitations) strictly enforced **tile attribute tables and attribute clash rules**:
 - **Nintendo Entertainment System (NES / Famicom)**: The screen is segmented into 16×16 pixel attribute blocks. Only 4 background sub-palettes can be defined simultaneously, and each 16×16 area must choose exactly 1 sub-palette (1 global backdrop color + 3 block colors).
