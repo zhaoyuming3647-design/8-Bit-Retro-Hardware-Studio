@@ -2,7 +2,7 @@
 
 **双引擎复古图像实验室 · Dual-Engine Retro Image Lab**
 
-两个独立的纯前端单文件工具，同一个仓库并行部署，互不依赖。
+两个独立的纯前端单文件工具，在同一个仓库中并行部署，互不依赖。
 
 **在线体验 / Live Demo**
 
@@ -44,19 +44,10 @@
 - 内置 4 张程序化测试底图（走廊 / 晴空 / 泳池 / 游园），也支持拖拽本地图片
 - 原图对比、PNG 导出
 
-### 技术架构
+### 项目结构
 
-- **纯前端 · 单文件 HTML**：两个工具各自只含一个 `.html`，CSS/JS 全部内联
-- **零后端 · 零构建**：无需 npm、无需编译，下载即用
-- **Canvas 2D / 像素级 ImageData 操作**
-- **确定性伪随机**：DREAMCORE 的 Seed 系统使用 Mulberry32 PRNG，相同种子在任何设备上生成相同噪点与撕裂图案
-- **GitHub Pages 多页面部署**：根目录 `index.html` + `dreamcore.html` 并行，互不影响
-
-### 本地运行
-
-```bash
-git clone https://github.com/zhaoyuming3647-design/Retro-Style-Studio.git
-cd Retro-Style-Studio
-# 直接双击 index.html 或 dreamcore.html，或：
-python3 -m http.server 8000
-# 浏览器访问 http://localhost:8000
+```text
+Retro-Style-Studio/
+├── index.html        # 8-Bit Retro Hardware Studio
+├── dreamcore.html    # DREAMCORE 旧核·梦核·怪核滤镜实验室
+└── README.md
