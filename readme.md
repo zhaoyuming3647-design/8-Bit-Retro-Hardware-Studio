@@ -9,7 +9,7 @@
 | 工具 Tool | 入口 Entry |
 |---|---|
 | **8-Bit Retro Hardware Studio** 真实硬件级像素与 GIF 转换 | [👉 立即打开](https://zhaoyuming3647-design.github.io/Retro-Style-Studio/) |
-| **DREAMCORE 旧核·梦核·怪核滤镜实验室** 像素级 Canvas 梦境渲染 | [👉 立即打开](https://zhaoyuming3647-design.github.io/Retro-Style-Studio/dreamcore.html) |
+| **DREAMCORE 旧核·梦核·怪核滤镜实验室** 像素级 Canvas 梦境渲染 | [👉 立即打开](https://zhaoyuming3647-design.github.io/Retro-Style-Studio/dreamcore.html) （因github缘故暂时无法打开）|
 
 支持全平台浏览器，手机移动端自动适配，完全离线可用。
 
